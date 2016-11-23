@@ -91,7 +91,6 @@ public class CapturePhotoFragment extends Fragment {
             mCurrentFlash = (mCurrentFlash + 1) % FLASH_OPTIONS.length;
             mFlashPhoto.setImageResource(FLASH_ICONS[mCurrentFlash]);
             mCameraPhotoView.setFlash(FLASH_OPTIONS[mCurrentFlash]);
-            mCameraPhotoView.takePicture();
         }
     }
 
