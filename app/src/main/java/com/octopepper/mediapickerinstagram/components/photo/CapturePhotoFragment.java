@@ -11,7 +11,6 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,8 +34,6 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class CapturePhotoFragment extends Fragment {
-
-    private static final String TAG = "CapturePhotoFragment";
 
     private static final Interpolator ACCELERATE_INTERPOLATOR = new AccelerateInterpolator();
     private static final Interpolator DECELERATE_INTERPOLATOR = new DecelerateInterpolator();
@@ -142,17 +139,14 @@ public class CapturePhotoFragment extends Fragment {
 
         @Override
         public void onCameraOpened(CameraView cameraView) {
-            Log.d(TAG, "onCameraOpened");
         }
 
         @Override
         public void onCameraClosed(CameraView cameraView) {
-            Log.d(TAG, "onCameraClosed");
         }
 
         @Override
         public void onPictureTaken(CameraView cameraView, final byte[] data) {
-            Log.d(TAG, "onPictureTaken " + data.length);
             getBackgroundHandler().post(new Runnable() {
                 @Override
                 public void run() {
@@ -163,7 +157,6 @@ public class CapturePhotoFragment extends Fragment {
                     String fileName = "yummypets_"+
                             TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis()) +".jpg";
                     if (dirDest.exists()) {
-                        Log.d(TAG, "exists " + dirDest.getAbsolutePath());
                         file = new File(dirDest, fileName);
                     } else {
                         if (dirDest.mkdir()) {
@@ -179,7 +172,7 @@ public class CapturePhotoFragment extends Fragment {
                             os.write(data);
                             os.close();
                         } catch (IOException e) {
-                            Log.w(TAG, "Cannot write to " + file, e);
+                            // Cannot write
                         } finally {
                             if (os != null) {
                                 try {
@@ -195,7 +188,6 @@ public class CapturePhotoFragment extends Fragment {
                 }
             });
         }
-
     };
 
     @Override

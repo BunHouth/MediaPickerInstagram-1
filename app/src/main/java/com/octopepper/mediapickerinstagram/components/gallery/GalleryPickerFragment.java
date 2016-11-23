@@ -1,5 +1,6 @@
 package com.octopepper.mediapickerinstagram.components.gallery;
 
+import android.graphics.Bitmap;
 import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Bundle;
@@ -9,13 +10,16 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 
 import com.octopepper.mediapickerinstagram.R;
 import com.octopepper.mediapickerinstagram.commons.models.Session;
 import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Transformation;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -35,7 +39,6 @@ public class GalleryPickerFragment extends Fragment implements GridAdapterListen
     private static final String EXTENSION_JPG = ".jpg";
     private static final String EXTENSION_JPEG = ".jpeg";
     private static final String EXTENSION_PNG = ".png";
-    private static final int PREVIEW_SIZE = 800;
     private static final int MARGING_GRID = 2;
 
     private Session mSession = Session.getInstance();
@@ -123,9 +126,48 @@ public class GalleryPickerFragment extends Fragment implements GridAdapterListen
                 .load(Uri.fromFile(file))
                 .noFade()
                 .noPlaceholder()
-                .resize(PREVIEW_SIZE, PREVIEW_SIZE)
-                .centerCrop()
+                .transform(setTransformation())
                 .into(mPreview);
+    }
+
+    private Transformation setTransformation() {
+        return new Transformation() {
+            @Override
+            public Bitmap transform(Bitmap source) {
+                int targetWidth, targetHeight;
+                double aspectRatio;
+
+                if (source.getWidth() > source.getHeight()) {
+                    targetWidth = getMaxSize(mPreview.getHeight());
+                    aspectRatio = (double) source.getHeight() / (double) source.getWidth();
+                    targetHeight = (int) (targetWidth * aspectRatio);
+                } else if (source.getWidth() < source.getHeight()) {
+                    targetHeight = getMaxSize(mPreview.getWidth());
+                    aspectRatio = (double) source.getWidth() / (double) source.getHeight();
+                    targetWidth = (int) (targetHeight * aspectRatio);
+                } else {
+                    targetHeight = mPreview.getWidth();
+                    aspectRatio = (double) source.getWidth() / (double) source.getHeight();
+                    targetWidth = (int) (targetHeight * aspectRatio);
+                }
+
+                Bitmap result = Bitmap.createScaledBitmap(source, targetWidth, targetHeight, false);
+                if (result != source) {
+                    source.recycle();
+                }
+                return result;
+            }
+
+            @Override
+            public String key() {
+                return mPreview.getWidth() + "x" + mPreview.getHeight();
+            }
+        };
+    }
+
+    private int getMaxSize(int size) {
+        double d = size * 1.5;
+        return (int) Math.round(d);
     }
 
     @Override

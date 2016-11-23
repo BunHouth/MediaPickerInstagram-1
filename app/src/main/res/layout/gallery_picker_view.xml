@@ -12,13 +12,20 @@
         android:layout_width="match_parent"
         android:layout_height="400dp">
 
-        <ImageView
-            android:id="@+id/mPreview"
+        <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:contentDescription="@string/app_name"
             android:elevation="8dp"
-            app:layout_scrollFlags="scroll|enterAlways"/>
+            app:layout_scrollFlags="scroll|enterAlways">
+
+            <com.octopepper.mediapickerinstagram.commons.ui.CropImageView
+                android:id="@+id/mPreview"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:contentDescription="@string/app_name"
+                android:scaleType="center"/>
+
+        </FrameLayout>
 
     </android.support.design.widget.AppBarLayout>
 

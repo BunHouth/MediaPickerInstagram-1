@@ -20,5 +20,6 @@
     <color name="hint">#BDBDBD</color>
     <color name="red_error">#C86A6A</color>
     <color name="red_record">#CE0B24</color>
+    <color name="guideline">#8CFFFFFF</color>
 
 </resources>
