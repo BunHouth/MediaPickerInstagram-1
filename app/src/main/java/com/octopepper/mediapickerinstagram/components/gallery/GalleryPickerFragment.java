@@ -15,13 +15,10 @@ import android.widget.ImageView;
 
 import com.octopepper.mediapickerinstagram.R;
 import com.octopepper.mediapickerinstagram.commons.models.Session;
-import com.octopepper.mediapickerinstagram.commons.modules.LoadMoreModule;
-import com.octopepper.mediapickerinstagram.commons.modules.LoadMoreModuleDelegate;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -30,7 +27,7 @@ import butterknife.ButterKnife;
  * Created by Guillaume on 17/11/2016.
  */
 
-public class GalleryPickerFragment extends Fragment implements GridAdapterListener, LoadMoreModuleDelegate {
+public class GalleryPickerFragment extends Fragment implements GridAdapterListener {
 
     @BindView(R.id.mGalleryRecyclerView)
     RecyclerView mGalleryRecyclerView;
@@ -44,14 +41,10 @@ public class GalleryPickerFragment extends Fragment implements GridAdapterListen
     private static final String EXTENSION_PNG = ".png";
     private static final int PREVIEW_SIZE = 800;
     private static final int MARGING_GRID = 2;
-    private static final int RANGE = 20;
 
     private Session mSession = Session.getInstance();
-    private LoadMoreModule mLoadMoreModule = new LoadMoreModule();
     private GridAdapter mGridAdapter;
     private ArrayList<File> mFiles;
-    private boolean isLoading = false;
-    private int mOffset;
     private boolean isFirstLoad = true;
 
     public static GalleryPickerFragment newInstance() {
@@ -67,8 +60,6 @@ public class GalleryPickerFragment extends Fragment implements GridAdapterListen
         mGalleryRecyclerView.setHasFixedSize(true);
         mGalleryRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), 3));
         mGalleryRecyclerView.addItemDecoration(addItemDecoration());
-        mLoadMoreModule.LoadMoreUtils(mGalleryRecyclerView, this, getContext());
-        mOffset = 0;
         fetchMedia();
     }
 
@@ -102,23 +93,9 @@ public class GalleryPickerFragment extends Fragment implements GridAdapterListen
 
         if (mFiles.size() > 0) {
             displayPreview(mFiles.get(0));
-            mGridAdapter.setItems(getRangePets());
+            mGridAdapter.setItems(mFiles); // getRangePets()
         }
         isFirstLoad = false;
-    }
-
-    private List<File> getRangePets() {
-        if (mOffset < mFiles.size()) {
-            if ((mOffset + RANGE) < mFiles.size()) {
-                return mFiles.subList(mOffset, mOffset + RANGE);
-            } else if ((mOffset + RANGE) >= mFiles.size()) {
-                return mFiles.subList(mOffset, mFiles.size());
-            } else {
-                return new ArrayList<>();
-            }
-        } else {
-            return new ArrayList<>();
-        }
     }
 
     private void parseDir(File dir) {
@@ -141,19 +118,6 @@ public class GalleryPickerFragment extends Fragment implements GridAdapterListen
                     mFiles.add(file);
                 }
             }
-        }
-    }
-
-    private void loadNext() {
-        if (!isLoading) {
-            isLoading = true;
-            mOffset += RANGE;
-            List<File> files = new ArrayList<>();
-            files.addAll(getRangePets());
-            if (files.size() > 0) {
-                mGridAdapter.addItems(files, mGridAdapter.getItemCount());
-            }
-            isLoading = false;
         }
     }
 
@@ -191,11 +155,6 @@ public class GalleryPickerFragment extends Fragment implements GridAdapterListen
     public void onClickMediaItem(File file) {
         displayPreview(file);
         mAppBarContainer.setExpanded(true, true);
-    }
-
-    @Override
-    public void shouldLoadMore() {
-        loadNext();
     }
 
 }
