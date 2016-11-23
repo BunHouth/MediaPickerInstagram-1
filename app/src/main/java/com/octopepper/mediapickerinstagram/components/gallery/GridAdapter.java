@@ -1,9 +1,5 @@
 package com.octopepper.mediapickerinstagram.components.gallery;
 
-/*
- * Created by Guillaume on 17/11/2016.
- */
-
 import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;

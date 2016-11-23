@@ -1,9 +1,5 @@
 package com.octopepper.mediapickerinstagram.commons.models;
 
-/*
- * Created by Guillaume on 21/11/2016.
- */
-
 public class Post extends Resource {
 
     private String fileName;

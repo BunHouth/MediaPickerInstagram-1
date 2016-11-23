@@ -23,10 +23,6 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-/*
- * Created by Guillaume on 17/11/2016.
- */
-
 public class GalleryPickerFragment extends Fragment implements GridAdapterListener {
 
     @BindView(R.id.mGalleryRecyclerView)

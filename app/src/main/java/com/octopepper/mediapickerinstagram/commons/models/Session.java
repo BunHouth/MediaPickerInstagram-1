@@ -1,9 +1,5 @@
 package com.octopepper.mediapickerinstagram.commons.models;
 
-/*
- * Created by Guillaume on 21/11/2016.
- */
-
 import java.io.File;
 
 public class Session {
