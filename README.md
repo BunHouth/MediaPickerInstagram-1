@@ -24,6 +24,7 @@ java/
   |  |  |  |- MainActivity.java
   |  |  |  |- MainApplication.java
 res/
+  |- anim/
   |- color/
   |- drawable/
   |- layout/
@@ -41,7 +42,6 @@ res/
 ## Git
 ### Branch
 * `master` --> **PRODUCTION**
-* `beta` --> **BETA**
 * `development` --> **DEVELOPMENT BRANCH**
 
 **For any news features create a new branch from development**
