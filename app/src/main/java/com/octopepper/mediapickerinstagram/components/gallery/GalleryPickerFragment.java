@@ -197,4 +197,5 @@ public class GalleryPickerFragment extends Fragment implements GridAdapterListen
     public void shouldLoadMore() {
         loadNext();
     }
+
 }
