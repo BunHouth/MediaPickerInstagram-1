@@ -11,6 +11,9 @@ import android.opengl.GLSurfaceView;
 import android.opengl.GLUtils;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -18,6 +21,7 @@ import android.view.View;
 import com.octopepper.mediapickerinstagram.R;
 import com.octopepper.mediapickerinstagram.commons.models.Session;
 import com.octopepper.mediapickerinstagram.commons.models.enums.EffectType;
+import com.octopepper.mediapickerinstagram.commons.modules.EffectModule;
 import com.octopepper.mediapickerinstagram.commons.ui.CustomGLSurfaceView;
 import com.octopepper.mediapickerinstagram.commons.ui.ToolbarView;
 
@@ -29,7 +33,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class EditorActivity extends AppCompatActivity implements ToolbarView.OnClickTitleListener,
-        ToolbarView.OnClickNextListener, ToolbarView.OnClickBackListener, GLSurfaceView.Renderer {
+        ToolbarView.OnClickNextListener, ToolbarView.OnClickBackListener, GLSurfaceView.Renderer,
+        EffectAdapterListener {
 
     private static final String TAG = "EditorActivity";
 
@@ -37,6 +42,8 @@ public class EditorActivity extends AppCompatActivity implements ToolbarView.OnC
     ToolbarView mEditorToolbar;
     @BindView(R.id.mEffectSview)
     CustomGLSurfaceView mEffectSview;
+    @BindView(R.id.mEffectChooserRecyclerView)
+    RecyclerView mEffectChooserRecyclerView;
 
     @BindString(R.string.toolbar_title_editor)
     String _toolbarTitleEditor;
@@ -45,6 +52,7 @@ public class EditorActivity extends AppCompatActivity implements ToolbarView.OnC
     private int[] mTextures = new int[2];
     private EffectContext mEffectContext;
     private Effect mEffect;
+    private EffectModule mEffectModule = new EffectModule();
     private TextureRenderer mTexRenderer = new TextureRenderer();
     private int mImageWidth;
     private int mImageHeight;
@@ -63,7 +71,16 @@ public class EditorActivity extends AppCompatActivity implements ToolbarView.OnC
         mEffectSview.setRenderMode(GLSurfaceView.RENDERMODE_WHEN_DIRTY);
         mEffectSview.setOnTouchListener(setOnTouchListener());
 
+        mEffectChooserRecyclerView.setHasFixedSize(true);
+        mEffectChooserRecyclerView.setItemAnimator(new DefaultItemAnimator());
+        final LinearLayoutManager mLayoutManager = new LinearLayoutManager(this);
+        mLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+        mEffectChooserRecyclerView.setLayoutManager(mLayoutManager);
+        EffectAdapter effectAdapter = new EffectAdapter(this);
+        effectAdapter.setListener(this);
+        mEffectChooserRecyclerView.setAdapter(effectAdapter);
         mCurrentEffect = EffectType.None;
+        effectAdapter.setItems(mEffectModule.getEffectTypes());
     }
 
     private View.OnTouchListener setOnTouchListener() {
@@ -75,13 +92,14 @@ public class EditorActivity extends AppCompatActivity implements ToolbarView.OnC
                 switch (action) {
                     case MotionEvent.ACTION_DOWN:
                         Log.d(TAG, "ACTION_DOWN");
-                        // TODO display without effect (release effect)
+                        // TODO remove effect
                         break;
                     case MotionEvent.ACTION_UP:
                         Log.d(TAG, "ACTION_UP");
-                        // TODO display with effect (set current effect)
+                        // TODO apply effect
                         break;
-                    default:break;
+                    default:
+                        break;
                 }
                 return true;
             }
@@ -103,14 +121,25 @@ public class EditorActivity extends AppCompatActivity implements ToolbarView.OnC
         GLToolbox.initTexParams();
     }
 
+    private void applyEffect() {
+        mEffect.apply(mTextures[0], mImageWidth, mImageHeight, mTextures[1]);
+    }
+
+    private void renderResult() {
+        if (mCurrentEffect != EffectType.None) {
+            // if no effect is chosen, just render the original bitmap
+            mTexRenderer.renderTexture(mTextures[1]);
+        } else {
+            // render the result of applyEffect()
+            mTexRenderer.renderTexture(mTextures[0]);
+        }
+    }
+
     private void initEffect() {
         EffectFactory effectFactory = mEffectContext.getFactory();
         if (mEffect != null) {
             mEffect.release();
         }
-        /**
-         * Initialize the correct effect
-         */
         switch (mCurrentEffect) {
             case None:
                 break;
@@ -159,16 +188,6 @@ public class EditorActivity extends AppCompatActivity implements ToolbarView.OnC
                         EffectFactory.EFFECT_FISHEYE);
                 mEffect.setParameter("scale", .5f);
                 break;
-            case FlipVert:
-                mEffect = effectFactory.createEffect(
-                        EffectFactory.EFFECT_FLIP);
-                mEffect.setParameter("vertical", true);
-                break;
-            case FlipHor:
-                mEffect = effectFactory.createEffect(
-                        EffectFactory.EFFECT_FLIP);
-                mEffect.setParameter("horizontal", true);
-                break;
             case Grain:
                 mEffect = effectFactory.createEffect(
                         EffectFactory.EFFECT_GRAIN);
@@ -189,11 +208,6 @@ public class EditorActivity extends AppCompatActivity implements ToolbarView.OnC
             case Posterize:
                 mEffect = effectFactory.createEffect(
                         EffectFactory.EFFECT_POSTERIZE);
-                break;
-            case Rotate:
-                mEffect = effectFactory.createEffect(
-                        EffectFactory.EFFECT_ROTATE);
-                mEffect.setParameter("angle", 180);
                 break;
             case Saturate:
                 mEffect = effectFactory.createEffect(
@@ -225,20 +239,6 @@ public class EditorActivity extends AppCompatActivity implements ToolbarView.OnC
                 break;
             default:
                 break;
-        }
-    }
-
-    private void applyEffect() {
-        mEffect.apply(mTextures[0], mImageWidth, mImageHeight, mTextures[1]);
-    }
-
-    private void renderResult() {
-        if (mCurrentEffect != EffectType.None) {
-            // if no effect is chosen, just render the original bitmap
-            mTexRenderer.renderTexture(mTextures[1]);
-        } else {
-            // render the result of applyEffect()
-            mTexRenderer.renderTexture(mTextures[0]);
         }
     }
 
@@ -298,5 +298,11 @@ public class EditorActivity extends AppCompatActivity implements ToolbarView.OnC
             applyEffect();
         }
         renderResult();
+    }
+
+    @Override
+    public void applyEffectType(EffectType effectType) {
+        mCurrentEffect = effectType;
+        // TODO apply effect
     }
 }

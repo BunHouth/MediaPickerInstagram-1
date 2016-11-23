@@ -5,9 +5,11 @@
 ## Work In Progress
 
 - [X] ~~Gallery picker~~
-- [ ] ImageView cropper
+- [ ] Gallery preview cropper
 - [X] ~~Capture photo~~
+- [ ] Capture photo cropper
 - [ ] Capture video
+- [ ] Capture video cropper
 - [ ] Editor photo
 
 ## Project Structure

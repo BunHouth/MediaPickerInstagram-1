@@ -1,16 +1,12 @@
 package com.octopepper.mediapickerinstagram.components.editor;
 
-/*
- * Created by Guillaume on 22/11/2016.
- */
-
 import android.opengl.GLES20;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 
-public class TextureRenderer {
+class TextureRenderer {
 
     private int mProgram;
     private int mTexSamplerHandle;
@@ -45,7 +41,7 @@ public class TextureRenderer {
     };
     private static final int FLOAT_SIZE_BYTES = 4;
 
-    public void init() {
+    void init() {
         // Create program
         mProgram = GLToolbox.createProgram(VERTEX_SHADER, FRAGMENT_SHADER);
         // Bind attributes and uniforms
@@ -68,19 +64,19 @@ public class TextureRenderer {
         GLES20.glDeleteProgram(mProgram);
     }
 
-    public void updateTextureSize(int texWidth, int texHeight) {
+    void updateTextureSize(int texWidth, int texHeight) {
         mTexWidth = texWidth;
         mTexHeight = texHeight;
         computeOutputVertices();
     }
 
-    public void updateViewSize(int viewWidth, int viewHeight) {
+    void updateViewSize(int viewWidth, int viewHeight) {
         mViewWidth = viewWidth;
         mViewHeight = viewHeight;
         computeOutputVertices();
     }
 
-    public void renderTexture(int texId) {
+    void renderTexture(int texId) {
         // Bind default FBO
         GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER, 0);
         // Use our shader program
@@ -132,6 +128,5 @@ public class TextureRenderer {
             mPosVertices.put(coords).position(0);
         }
     }
-
 
 }

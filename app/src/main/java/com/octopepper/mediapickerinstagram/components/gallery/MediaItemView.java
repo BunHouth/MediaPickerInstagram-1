@@ -2,7 +2,6 @@ package com.octopepper.mediapickerinstagram.components.gallery;
 
 import android.content.Context;
 import android.net.Uri;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;

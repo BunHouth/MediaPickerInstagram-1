@@ -46,7 +46,8 @@
             android:layout_height="wrap_content"
             android:padding="16dp"
             android:text="@string/toolbar_bt_next"
-            android:textColor="@color/green"
+            android:clickable="true"
+            android:textColor="@color/btn_next_color"
             android:textSize="18sp"
             app:customFont="Roboto-Regular" />
 

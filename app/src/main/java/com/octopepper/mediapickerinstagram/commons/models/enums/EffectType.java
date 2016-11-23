@@ -15,20 +15,17 @@ public enum EffectType {
     DuoTone(),
     FillLight(),
     Fisheye(),
-    FlipVert(),
-    FlipHor(),
     Grain(),
     GrayScale(),
     Lomoish(),
     Negative(),
     Posterize(),
-    Rotate(),
     Saturate(),
     Sepia(),
     Sharpen(),
     Temperature(),
     Tint(),
-    Vignette(),
+    Vignette();
 
     EffectType() {}
 }

@@ -5,6 +5,7 @@
     <color name="colorAccent">@color/dark_chocolate</color>
 
     <color name="green">#A8B32C</color>
+    <color name="green_60">#99A8B32C</color>
     <color name="light_cream">#E6E3E0</color>
     <color name="sunny_grey">#BBB4A7</color>
     <color name="light_grey">#d1d1d1</color>
