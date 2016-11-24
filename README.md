@@ -4,8 +4,7 @@
 
 ## Work In Progress
 
-- [X] ~~Gallery picker~~
-- [X] Preview cropper
+- [X] Gallery picker
 - [ ] Capture photo
 - [ ] Capture video
 - [ ] Editor photo
