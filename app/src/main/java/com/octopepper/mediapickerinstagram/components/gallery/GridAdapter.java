@@ -1,7 +1,6 @@
 package com.octopepper.mediapickerinstagram.components.gallery;
 
 import android.content.Context;
-import android.view.View;
 import android.view.ViewGroup;
 
 import com.octopepper.mediapickerinstagram.commons.adapters.RecyclerViewAdapterBase;

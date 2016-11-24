@@ -1,5 +1,6 @@
 package com.octopepper.mediapickerinstagram.components.gallery;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Rect;
 import android.net.Uri;
@@ -10,29 +11,31 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
-import android.widget.ImageView;
 
 import com.octopepper.mediapickerinstagram.R;
+import com.octopepper.mediapickerinstagram.commons.bus.RxBusNext;
 import com.octopepper.mediapickerinstagram.commons.models.Session;
+import com.octopepper.mediapickerinstagram.commons.ui.CropImageView;
+import com.octopepper.mediapickerinstagram.commons.utils.FileUtils;
 import com.squareup.picasso.Picasso;
-import com.squareup.picasso.Transformation;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import rx.functions.Action1;
 
 public class GalleryPickerFragment extends Fragment implements GridAdapterListener {
 
     @BindView(R.id.mGalleryRecyclerView)
     RecyclerView mGalleryRecyclerView;
     @BindView(R.id.mPreview)
-    ImageView mPreview;
+    CropImageView mPreview;
     @BindView(R.id.mAppBarContainer)
     AppBarLayout mAppBarContainer;
 
@@ -42,6 +45,8 @@ public class GalleryPickerFragment extends Fragment implements GridAdapterListen
     private static final int MARGING_GRID = 2;
 
     private Session mSession = Session.getInstance();
+    private final RxBusNext mRxBus = RxBusNext.getInstance();
+    private GalleryPickerFragmentListener listener;
     private GridAdapter mGridAdapter;
     private ArrayList<File> mFiles;
     private boolean isFirstLoad = true;
@@ -92,7 +97,7 @@ public class GalleryPickerFragment extends Fragment implements GridAdapterListen
 
         if (mFiles.size() > 0) {
             displayPreview(mFiles.get(0));
-            mGridAdapter.setItems(mFiles); // getRangePets()
+            mGridAdapter.setItems(mFiles);
         }
         isFirstLoad = false;
     }
@@ -121,58 +126,66 @@ public class GalleryPickerFragment extends Fragment implements GridAdapterListen
     }
 
     private void displayPreview(File file) {
-        mSession.setFileToUpload(file);
         Picasso.with(getContext())
                 .load(Uri.fromFile(file))
                 .noFade()
                 .noPlaceholder()
-                .transform(setTransformation())
                 .into(mPreview);
     }
 
-    private Transformation setTransformation() {
-        return new Transformation() {
-            @Override
-            public Bitmap transform(Bitmap source) {
-                int targetWidth, targetHeight;
-                double aspectRatio;
-
-                if (source.getWidth() > source.getHeight()) {
-                    targetWidth = getMaxSize(mPreview.getHeight());
-                    aspectRatio = (double) source.getHeight() / (double) source.getWidth();
-                    targetHeight = (int) (targetWidth * aspectRatio);
-                } else if (source.getWidth() < source.getHeight()) {
-                    targetHeight = getMaxSize(mPreview.getWidth());
-                    aspectRatio = (double) source.getWidth() / (double) source.getHeight();
-                    targetWidth = (int) (targetHeight * aspectRatio);
-                } else {
-                    targetHeight = mPreview.getWidth();
-                    aspectRatio = (double) source.getWidth() / (double) source.getHeight();
-                    targetWidth = (int) (targetHeight * aspectRatio);
-                }
-
-                Bitmap result = Bitmap.createScaledBitmap(source, targetWidth, targetHeight, false);
-                if (result != source) {
-                    source.recycle();
-                }
-                return result;
-            }
-
-            @Override
-            public String key() {
-                return mPreview.getWidth() + "x" + mPreview.getHeight();
-            }
-        };
+    private void eventBus() {
+        mRxBus.toObserverable()
+                .subscribe(new Action1<Object>() {
+                    @Override
+                    public void call(Object o) {
+                        mSession.setFileToUpload(saveBitmap(mPreview.getCroppedImage(),
+                                FileUtils.getNewFilePath()));
+                        listener.openEditor();
+                    }
+                });
     }
 
-    private int getMaxSize(int size) {
-        double d = size * 1.5;
-        return (int) Math.round(d);
+    private File saveBitmap(Bitmap bitmap, String path) {
+        File file = null;
+        if (bitmap != null) {
+            file = new File(path);
+            try {
+                FileOutputStream outputStream = null;
+                try {
+                    outputStream = new FileOutputStream(path);
+                    bitmap.compress(Bitmap.CompressFormat.JPEG, 70, outputStream);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                } finally {
+                    try {
+                        if (outputStream != null) {
+                            outputStream.close();
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return file;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        eventBus();
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        try {
+            listener = (GalleryPickerFragmentListener) context;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(context.toString() + " must implement GalleryPickerFragmentListener");
+        }
     }
 
     @Override
@@ -187,6 +200,12 @@ public class GalleryPickerFragment extends Fragment implements GridAdapterListen
     public void onPause() {
         super.onPause();
         Picasso.with(getContext()).cancelRequest(mPreview);
+        mRxBus.reset();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
     }
 
     @Override

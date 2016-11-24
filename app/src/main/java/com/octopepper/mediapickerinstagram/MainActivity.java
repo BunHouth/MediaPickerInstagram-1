@@ -8,12 +8,13 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 
 import com.octopepper.mediapickerinstagram.commons.adapters.ViewPagerAdapter;
-import com.octopepper.mediapickerinstagram.commons.models.Session;
+import com.octopepper.mediapickerinstagram.commons.bus.RxBusNext;
 import com.octopepper.mediapickerinstagram.commons.models.enums.SourceType;
 import com.octopepper.mediapickerinstagram.commons.modules.NavigatorEditorModule;
 import com.octopepper.mediapickerinstagram.commons.modules.PermissionModule;
 import com.octopepper.mediapickerinstagram.commons.ui.ToolbarView;
 import com.octopepper.mediapickerinstagram.components.gallery.GalleryPickerFragment;
+import com.octopepper.mediapickerinstagram.components.gallery.GalleryPickerFragmentListener;
 import com.octopepper.mediapickerinstagram.components.photo.CapturePhotoFragment;
 import com.octopepper.mediapickerinstagram.components.photo.CapturePhotoFragmentListener;
 import com.octopepper.mediapickerinstagram.components.video.CaptureVideoFragment;
@@ -26,7 +27,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class MainActivity extends AppCompatActivity implements ToolbarView.OnClickTitleListener,
-        ToolbarView.OnClickNextListener, ToolbarView.OnClickBackListener, CapturePhotoFragmentListener {
+        ToolbarView.OnClickNextListener, ToolbarView.OnClickBackListener, CapturePhotoFragmentListener,
+        GalleryPickerFragmentListener {
 
     @BindView(R.id.mMainTabLayout)
     TabLayout mMainTabLayout;
@@ -43,7 +45,7 @@ public class MainActivity extends AppCompatActivity implements ToolbarView.OnCli
     String _tabVideo;
 
     private HashSet<SourceType> mSourceTypeSet = new HashSet<>();
-    private Session mSession = Session.getInstance();
+    private RxBusNext mRxBusNext = RxBusNext.getInstance();
 
     private void initViews() {
         PermissionModule permissionModule = new PermissionModule(this);
@@ -128,7 +130,6 @@ public class MainActivity extends AppCompatActivity implements ToolbarView.OnCli
         setContentView(R.layout.main_view);
         ButterKnife.bind(this);
 
-        // If you want to start activity with custom Tab
         mSourceTypeSet.add(SourceType.Gallery);
         mSourceTypeSet.add(SourceType.Photo);
         mSourceTypeSet.add(SourceType.Video);
@@ -143,14 +144,12 @@ public class MainActivity extends AppCompatActivity implements ToolbarView.OnCli
 
     @Override
     public void onClickBack() {
-
+        onBackPressed();
     }
 
     @Override
     public void onClickNext() {
-        if (mSession.getFileToUpload() != null) {
-            openPhotoEditor();
-        }
+        mRxBusNext.send(true);
     }
 
     @Override
@@ -162,4 +161,5 @@ public class MainActivity extends AppCompatActivity implements ToolbarView.OnCli
     public void openEditor() {
         openPhotoEditor();
     }
+
 }

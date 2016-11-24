@@ -7,7 +7,6 @@ import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.support.v4.app.Fragment;
@@ -22,12 +21,12 @@ import android.widget.ImageView;
 import com.octopepper.mediapickerinstagram.R;
 import com.octopepper.mediapickerinstagram.commons.cameraview.CameraView;
 import com.octopepper.mediapickerinstagram.commons.models.Session;
+import com.octopepper.mediapickerinstagram.commons.utils.FileUtils;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -37,7 +36,6 @@ public class CapturePhotoFragment extends Fragment {
 
     private static final Interpolator ACCELERATE_INTERPOLATOR = new AccelerateInterpolator();
     private static final Interpolator DECELERATE_INTERPOLATOR = new DecelerateInterpolator();
-    private static final String DIR_YUMMYPETS = "/yummypets";
 
     @BindView(R.id.mCameraPhotoView)
     CameraView mCameraPhotoView;
@@ -150,17 +148,13 @@ public class CapturePhotoFragment extends Fragment {
             getBackgroundHandler().post(new Runnable() {
                 @Override
                 public void run() {
-                    File dirDest =
-                            new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),
-                                    DIR_YUMMYPETS);
+                    File dirDest = FileUtils.getLocalDir();
                     File file;
-                    String fileName = "yummypets_"+
-                            TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis()) +".jpg";
                     if (dirDest.exists()) {
-                        file = new File(dirDest, fileName);
+                        file = new File(FileUtils.getNewFilePath());
                     } else {
                         if (dirDest.mkdir()) {
-                            file = new File(dirDest, fileName);
+                            file = new File(FileUtils.getNewFilePath());
                         } else {
                             file = null;
                         }
