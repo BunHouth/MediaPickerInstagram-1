@@ -105,6 +105,8 @@ public class GalleryPickerFragment extends Fragment implements GridAdapterListen
         if (mFiles.size() > 0) {
             displayPreview(mFiles.get(0));
             mGridAdapter.setItems(mFiles);
+        } else {
+            // TODO display wording + illustration --> No media found
         }
         isFirstLoad = false;
     }
