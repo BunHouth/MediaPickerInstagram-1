@@ -106,4 +106,4 @@ Android fragmentation analytics --> [Platform Versions](http://developer.android
 * Max API 25 --> Nougat : 7.x.x
 
 ## Contributors
-[NodensN](https://github.com/NodensN)
+[NodensN](https://twitter.com/Guillaume_Mas)
