@@ -5,7 +5,7 @@
 ## Work In Progress
 
 - [X] ~~Gallery picker~~
-- [ ] Preview cropper
+- [X] Preview cropper
 - [ ] Capture photo
 - [ ] Capture video
 - [ ] Editor photo
@@ -21,6 +21,10 @@ java/
   |  |  |- mediapickerinstagram/
   |  |  |  |- commons/
   |  |  |  |- components/
+  |  |  |  |  |- editor/
+  |  |  |  |  |- gallery/
+  |  |  |  |  |- photo/
+  |  |  |  |  |- video/
   |  |  |  |- MainActivity.java
   |  |  |  |- MainApplication.java
 res/
@@ -67,6 +71,7 @@ $ git commit -am "[... your message ...]"
 * Butter Knife --> [link](http://jakewharton.github.io/butterknife/)
 * Picasso --> [link](http://square.github.io/picasso/)
 * Rebound --> [link](http://facebook.github.io/rebound/)
+* RxJava --> [link](https://github.com/ReactiveX/RxJava)
 
 ## Naming Conventions
 ```java
