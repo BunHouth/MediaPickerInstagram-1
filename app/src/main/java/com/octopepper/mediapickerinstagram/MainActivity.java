@@ -132,7 +132,7 @@ public class MainActivity extends AppCompatActivity implements ToolbarView.OnCli
 
         mSourceTypeSet.add(SourceType.Gallery);
         mSourceTypeSet.add(SourceType.Photo);
-        mSourceTypeSet.add(SourceType.Video);
+//        mSourceTypeSet.add(SourceType.Video);
 
         initViews();
     }

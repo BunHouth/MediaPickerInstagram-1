@@ -17,6 +17,7 @@ import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.Interpolator;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 
 import com.octopepper.mediapickerinstagram.R;
 import com.octopepper.mediapickerinstagram.commons.cameraview.CameraView;
@@ -96,6 +97,10 @@ public class CapturePhotoFragment extends Fragment {
     private void initViews() {
         if (mCameraPhotoView != null) {
             mCameraPhotoView.addCallback(mCallback);
+            float heightDp = getResources().getDisplayMetrics().heightPixels / 1.75f;
+            RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) mCameraPhotoView.getLayoutParams();
+            lp.height = (int)heightDp;
+            mCameraPhotoView.setLayoutParams(lp);
         }
     }
 

@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -64,6 +65,12 @@ public class GalleryPickerFragment extends Fragment implements GridAdapterListen
         mGalleryRecyclerView.setHasFixedSize(true);
         mGalleryRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), 3));
         mGalleryRecyclerView.addItemDecoration(addItemDecoration());
+
+        float heightDp = getResources().getDisplayMetrics().heightPixels / 1.75f;
+        CoordinatorLayout.LayoutParams lp = (CoordinatorLayout.LayoutParams) mAppBarContainer.getLayoutParams();
+        lp.height = (int)heightDp;
+        mAppBarContainer.setLayoutParams(lp);
+
         fetchMedia();
     }
 
