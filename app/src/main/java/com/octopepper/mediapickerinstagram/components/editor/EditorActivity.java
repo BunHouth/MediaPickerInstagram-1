@@ -21,9 +21,11 @@ import android.view.View;
 import com.octopepper.mediapickerinstagram.R;
 import com.octopepper.mediapickerinstagram.commons.models.Session;
 import com.octopepper.mediapickerinstagram.commons.models.enums.EffectType;
-import com.octopepper.mediapickerinstagram.commons.modules.EffectModule;
 import com.octopepper.mediapickerinstagram.commons.ui.CustomGLSurfaceView;
 import com.octopepper.mediapickerinstagram.commons.ui.ToolbarView;
+
+import java.util.ArrayList;
+import java.util.EnumSet;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
@@ -52,7 +54,6 @@ public class EditorActivity extends AppCompatActivity implements ToolbarView.OnC
     private int[] mTextures = new int[2];
     private EffectContext mEffectContext;
     private Effect mEffect;
-    private EffectModule mEffectModule = new EffectModule();
     private TextureRenderer mTexRenderer = new TextureRenderer();
     private int mImageWidth;
     private int mImageHeight;
@@ -80,7 +81,7 @@ public class EditorActivity extends AppCompatActivity implements ToolbarView.OnC
         effectAdapter.setListener(this);
         mEffectChooserRecyclerView.setAdapter(effectAdapter);
         mCurrentEffect = EffectType.None;
-        effectAdapter.setItems(mEffectModule.getEffectTypes());
+        effectAdapter.setItems(new ArrayList<>(EnumSet.allOf(EffectType.class)));
     }
 
     private View.OnTouchListener setOnTouchListener() {
