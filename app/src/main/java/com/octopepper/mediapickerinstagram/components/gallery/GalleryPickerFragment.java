@@ -162,7 +162,7 @@ public class GalleryPickerFragment extends Fragment implements GridAdapterListen
                 FileOutputStream outputStream = null;
                 try {
                     outputStream = new FileOutputStream(path);
-                    bitmap.compress(Bitmap.CompressFormat.JPEG, 70, outputStream);
+                    bitmap.compress(Bitmap.CompressFormat.JPEG, 85, outputStream);
                 } catch (Exception e) {
                     e.printStackTrace();
                 } finally {
