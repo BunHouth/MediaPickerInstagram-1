@@ -44,7 +44,7 @@ public class EffectItemView extends LinearLayout implements ReboundModuleDelegat
     public void bind(EffectType effectType) {
         mCurrentEffectType = effectType;
         mReboundModule.init(mEffectTypeView);
-//        mEffectName.setText(); TODO set name by effect
+        mEffectName.setText(effectType.getName());
         Picasso.with(getContext())
                 .load(Uri.fromFile(mSession.getFileToUpload()))
                 .resize(350, 350)

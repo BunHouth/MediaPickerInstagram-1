@@ -11,8 +11,7 @@
         android:id="@+id/mEffectName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Effect"
-        android:textColor="@color/dim_grey"
+        android:textColor="@color/light_cream"
         android:textSize="14sp"
         app:customFont="Roboto-Regular"/>
 
@@ -20,7 +19,6 @@
         android:id="@+id/mEffectTypeView"
         android:layout_width="80dp"
         android:layout_height="80dp"
-        android:layout_marginTop="8dp"
-        android:elevation="4dp"/>
+        android:layout_marginTop="8dp"/>
 
 </LinearLayout>

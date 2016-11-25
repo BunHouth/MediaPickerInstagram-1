@@ -1,27 +1,30 @@
 package com.octopepper.mediapickerinstagram.commons.models.enums;
 
 public enum EffectType {
-    None(),
-    AutoFix(),
-    BlackAndWhite(),
-    Brightness(),
-    Contrast(),
-    CrossProcess(),
-    Documentary(),
-    DuoTone(),
-    FillLight(),
-    Fisheye(),
-    Grain(),
-    GrayScale(),
-    Lomoish(),
-    Negative(),
-    Posterize(),
-    Saturate(),
-    Sepia(),
-    Sharpen(),
-    Temperature(),
-    Tint(),
-    Vignette();
+    None("None"),
+    Tonal("Tonal"),
+    BlackAndWhite("BlackAndWhite"),
+    Brightness("Brightness"),
+    Contrast("Contrast"),
+    CrossProcess("CrossProcess"),
+    Documentary("Documentary"),
+    FillLight("FillLight"),
+    Grain("Grain"),
+    GrayScale("GrayScale"),
+    Lomoish("Lomoish"),
+    Posterize("Posterize"),
+    Saturate("Saturate"),
+    Sepia("Sepia"),
+    Temperature("Temperature"),
+    Vignette("Vignette");
 
-    EffectType() {}
+    private String name;
+
+    EffectType(String name) {
+        this.name = name;
+    }
+
+    public String getName() {
+        return name;
+    }
 }

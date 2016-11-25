@@ -17,6 +17,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.RelativeLayout;
 
 import com.octopepper.mediapickerinstagram.R;
 import com.octopepper.mediapickerinstagram.commons.models.Session;
@@ -66,6 +67,11 @@ public class EditorActivity extends AppCompatActivity implements ToolbarView.OnC
                 .setOnClickNextListener(this)
                 .setTitle(_toolbarTitleEditor)
                 .showNext();
+
+        float heightDp = getResources().getDisplayMetrics().heightPixels / 1.75f;
+        RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) mEffectSview.getLayoutParams();
+        lp.height = (int)heightDp;
+        mEffectSview.setLayoutParams(lp);
 
         mEffectSview.setEGLContextClientVersion(2);
         mEffectSview.setRenderer(this);
@@ -144,11 +150,6 @@ public class EditorActivity extends AppCompatActivity implements ToolbarView.OnC
         switch (mCurrentEffect) {
             case None:
                 break;
-            case AutoFix:
-                mEffect = effectFactory.createEffect(
-                        EffectFactory.EFFECT_AUTOFIX);
-                mEffect.setParameter("scale", 0.5f);
-                break;
             case BlackAndWhite:
                 mEffect = effectFactory.createEffect(
                         EffectFactory.EFFECT_BLACKWHITE);
@@ -163,7 +164,7 @@ public class EditorActivity extends AppCompatActivity implements ToolbarView.OnC
             case Contrast:
                 mEffect = effectFactory.createEffect(
                         EffectFactory.EFFECT_CONTRAST);
-                mEffect.setParameter("contrast", 1.4f);
+                mEffect.setParameter("contrast", 1.5f);
                 break;
             case CrossProcess:
                 mEffect = effectFactory.createEffect(
@@ -173,21 +174,10 @@ public class EditorActivity extends AppCompatActivity implements ToolbarView.OnC
                 mEffect = effectFactory.createEffect(
                         EffectFactory.EFFECT_DOCUMENTARY);
                 break;
-            case DuoTone:
-                mEffect = effectFactory.createEffect(
-                        EffectFactory.EFFECT_DUOTONE);
-                mEffect.setParameter("first_color", Color.YELLOW);
-                mEffect.setParameter("second_color", Color.DKGRAY);
-                break;
             case FillLight:
                 mEffect = effectFactory.createEffect(
                         EffectFactory.EFFECT_FILLLIGHT);
                 mEffect.setParameter("strength", .8f);
-                break;
-            case Fisheye:
-                mEffect = effectFactory.createEffect(
-                        EffectFactory.EFFECT_FISHEYE);
-                mEffect.setParameter("scale", .5f);
                 break;
             case Grain:
                 mEffect = effectFactory.createEffect(
@@ -202,10 +192,6 @@ public class EditorActivity extends AppCompatActivity implements ToolbarView.OnC
                 mEffect = effectFactory.createEffect(
                         EffectFactory.EFFECT_LOMOISH);
                 break;
-            case Negative:
-                mEffect = effectFactory.createEffect(
-                        EffectFactory.EFFECT_NEGATIVE);
-                break;
             case Posterize:
                 mEffect = effectFactory.createEffect(
                         EffectFactory.EFFECT_POSTERIZE);
@@ -219,19 +205,15 @@ public class EditorActivity extends AppCompatActivity implements ToolbarView.OnC
                 mEffect = effectFactory.createEffect(
                         EffectFactory.EFFECT_SEPIA);
                 break;
-            case Sharpen:
-                mEffect = effectFactory.createEffect(
-                        EffectFactory.EFFECT_SHARPEN);
-                break;
             case Temperature:
                 mEffect = effectFactory.createEffect(
                         EffectFactory.EFFECT_TEMPERATURE);
                 mEffect.setParameter("scale", .9f);
                 break;
-            case Tint:
+            case Tonal:
                 mEffect = effectFactory.createEffect(
                         EffectFactory.EFFECT_TINT);
-                mEffect.setParameter("tint", Color.MAGENTA);
+                mEffect.setParameter("tint", Color.WHITE);
                 break;
             case Vignette:
                 mEffect = effectFactory.createEffect(
@@ -304,6 +286,6 @@ public class EditorActivity extends AppCompatActivity implements ToolbarView.OnC
     @Override
     public void applyEffectType(EffectType effectType) {
         mCurrentEffect = effectType;
-        // TODO apply effect
+        mEffectSview.requestRender();
     }
 }
