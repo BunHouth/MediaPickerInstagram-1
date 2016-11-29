@@ -66,9 +66,8 @@ public class GalleryPickerFragment extends Fragment implements GridAdapterListen
         mGalleryRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), 3));
         mGalleryRecyclerView.addItemDecoration(addItemDecoration());
 
-        float heightDp = getResources().getDisplayMetrics().heightPixels / 1.75f;
         CoordinatorLayout.LayoutParams lp = (CoordinatorLayout.LayoutParams) mAppBarContainer.getLayoutParams();
-        lp.height = (int)heightDp;
+        lp.height = getResources().getDisplayMetrics().widthPixels;
         mAppBarContainer.setLayoutParams(lp);
 
         fetchMedia();
@@ -106,7 +105,7 @@ public class GalleryPickerFragment extends Fragment implements GridAdapterListen
             displayPreview(mFiles.get(0));
             mGridAdapter.setItems(mFiles);
         } else {
-            // TODO display wording + illustration --> No media found
+            // display wording + illustration --> No media found
         }
         isFirstLoad = false;
     }

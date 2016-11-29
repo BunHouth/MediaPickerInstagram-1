@@ -22,9 +22,8 @@ public class CaptureVideoFragment extends Fragment {
     }
 
     private void initViews() {
-        float heightDp = getResources().getDisplayMetrics().heightPixels / 1.75f;
         RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) mCameraVideoView.getLayoutParams();
-        lp.height = (int)heightDp;
+        lp.height = getResources().getDisplayMetrics().widthPixels;
         mCameraVideoView.setLayoutParams(lp);
     }
 
