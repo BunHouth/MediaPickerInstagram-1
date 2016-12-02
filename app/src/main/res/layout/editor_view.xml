@@ -11,8 +11,8 @@
         android:background="@color/white"
         android:elevation="4dp"/>
 
-    <com.octopepper.mediapickerinstagram.commons.ui.CustomGLSurfaceView
-        android:id="@+id/mEffectSview"
+    <ImageView
+        android:id="@+id/mEffectPreview"
         android:layout_width="match_parent"
         android:layout_height="400dp"
         android:layout_below="@id/mEditorToolbar"/>
@@ -20,7 +20,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/mEffectSview"
+        android:layout_below="@id/mEffectPreview"
         android:gravity="center">
 
         <android.support.v7.widget.RecyclerView

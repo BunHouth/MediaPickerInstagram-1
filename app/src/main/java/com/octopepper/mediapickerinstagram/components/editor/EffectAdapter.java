@@ -5,14 +5,14 @@ import android.view.ViewGroup;
 
 import com.octopepper.mediapickerinstagram.commons.adapters.RecyclerViewAdapterBase;
 import com.octopepper.mediapickerinstagram.commons.adapters.ViewWrapper;
-import com.octopepper.mediapickerinstagram.commons.models.enums.EffectType;
+import com.octopepper.mediapickerinstagram.commons.models.Thumbnail;
+import com.zomato.photofilters.imageprocessors.Filter;
 
 import java.lang.ref.WeakReference;
 
-class EffectAdapter extends RecyclerViewAdapterBase<EffectType, EffectItemView> implements EffectItemViewListener {
+class EffectAdapter extends RecyclerViewAdapterBase<Thumbnail, EffectItemView> implements EffectItemViewListener {
 
     private Context mContext;
-
     private WeakReference<EffectAdapterListener> mWrListener;
 
     void setListener(EffectAdapterListener listener) {
@@ -36,7 +36,8 @@ class EffectAdapter extends RecyclerViewAdapterBase<EffectType, EffectItemView> 
     }
 
     @Override
-    public void onClickEffectType(EffectType effectType) {
-        mWrListener.get().applyEffectType(effectType);
+    public void onClickEffectType(Filter filter) {
+        mWrListener.get().applyEffectType(filter);
     }
+
 }

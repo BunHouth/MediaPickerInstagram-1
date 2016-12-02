@@ -3,4 +3,5 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="guideline_thickness">3px</dimen>
+    <dimen name="thumbnail_size">80dp</dimen>
 </resources>

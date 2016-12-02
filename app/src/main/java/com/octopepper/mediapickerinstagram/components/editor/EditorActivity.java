@@ -2,49 +2,46 @@ package com.octopepper.mediapickerinstagram.components.editor;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
-import android.media.effect.Effect;
-import android.media.effect.EffectContext;
-import android.media.effect.EffectFactory;
-import android.opengl.GLES20;
-import android.opengl.GLSurfaceView;
-import android.opengl.GLUtils;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import com.octopepper.mediapickerinstagram.R;
+import com.octopepper.mediapickerinstagram.commons.managers.ThumbnailManager;
 import com.octopepper.mediapickerinstagram.commons.models.Session;
-import com.octopepper.mediapickerinstagram.commons.models.enums.EffectType;
-import com.octopepper.mediapickerinstagram.commons.ui.CustomGLSurfaceView;
+import com.octopepper.mediapickerinstagram.commons.models.Thumbnail;
 import com.octopepper.mediapickerinstagram.commons.ui.ToolbarView;
+import com.squareup.picasso.Picasso;
+import com.zomato.photofilters.SampleFilters;
+import com.zomato.photofilters.imageprocessors.Filter;
+import com.zomato.photofilters.imageprocessors.subfilters.ColorOverlaySubfilter;
+import com.zomato.photofilters.imageprocessors.subfilters.SaturationSubfilter;
 
-import java.util.ArrayList;
-import java.util.EnumSet;
-
-import javax.microedition.khronos.egl.EGLConfig;
-import javax.microedition.khronos.opengles.GL10;
+import java.util.List;
 
 import butterknife.BindString;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class EditorActivity extends AppCompatActivity implements ToolbarView.OnClickTitleListener,
-        ToolbarView.OnClickNextListener, ToolbarView.OnClickBackListener, GLSurfaceView.Renderer,
+        ToolbarView.OnClickNextListener, ToolbarView.OnClickBackListener,
         EffectAdapterListener {
 
-    private static final String TAG = "EditorActivity";
+    static {
+        System.loadLibrary("NativeImageProcessor");
+    }
 
     @BindView(R.id.mEditorToolbar)
     ToolbarView mEditorToolbar;
-    @BindView(R.id.mEffectSview)
-    CustomGLSurfaceView mEffectSview;
+    @BindView(R.id.mEffectPreview)
+    ImageView mEffectPreview;
     @BindView(R.id.mEffectChooserRecyclerView)
     RecyclerView mEffectChooserRecyclerView;
 
@@ -52,14 +49,7 @@ public class EditorActivity extends AppCompatActivity implements ToolbarView.OnC
     String _toolbarTitleEditor;
 
     private Session mSession = Session.getInstance();
-    private int[] mTextures = new int[2];
-    private EffectContext mEffectContext;
-    private Effect mEffect;
-    private TextureRenderer mTexRenderer = new TextureRenderer();
-    private int mImageWidth;
-    private int mImageHeight;
-    private boolean mInitialized = false;
-    EffectType mCurrentEffect;
+    private Filter mCurrentFilter = null;
 
     private void initViews() {
         mEditorToolbar.setOnClickBackMenuListener(this)
@@ -68,26 +58,86 @@ public class EditorActivity extends AppCompatActivity implements ToolbarView.OnC
                 .setTitle(_toolbarTitleEditor)
                 .showNext();
 
-        float heightDp = getResources().getDisplayMetrics().heightPixels / 1.75f;
-        RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) mEffectSview.getLayoutParams();
-        lp.height = (int)heightDp;
-        mEffectSview.setLayoutParams(lp);
-
-        mEffectSview.setEGLContextClientVersion(2);
-        mEffectSview.setRenderer(this);
-        mEffectSview.setRenderMode(GLSurfaceView.RENDERMODE_WHEN_DIRTY);
-        mEffectSview.setOnTouchListener(setOnTouchListener());
+        RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) mEffectPreview.getLayoutParams();
+        lp.height = getResources().getDisplayMetrics().widthPixels;
+        mEffectPreview.setLayoutParams(lp);
 
         mEffectChooserRecyclerView.setHasFixedSize(true);
         mEffectChooserRecyclerView.setItemAnimator(new DefaultItemAnimator());
         final LinearLayoutManager mLayoutManager = new LinearLayoutManager(this);
         mLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         mEffectChooserRecyclerView.setLayoutManager(mLayoutManager);
-        EffectAdapter effectAdapter = new EffectAdapter(this);
+        final EffectAdapter effectAdapter = new EffectAdapter(this);
         effectAdapter.setListener(this);
         mEffectChooserRecyclerView.setAdapter(effectAdapter);
-        mCurrentEffect = EffectType.None;
-        effectAdapter.setItems(new ArrayList<>(EnumSet.allOf(EffectType.class)));
+
+        Picasso.with(this).load(Uri.fromFile(mSession.getFileToUpload()))
+                .noFade()
+                .noPlaceholder()
+                .into(mEffectPreview);
+        mEffectPreview.setOnTouchListener(setOnTouchListener());
+
+        effectAdapter.setItems(getFilters());
+    }
+
+    private List<Thumbnail> getFilters() {
+        Bitmap bitmap = getBitmapFromFile();
+
+        Thumbnail t1 = new Thumbnail();
+        Thumbnail t2 = new Thumbnail();
+        Thumbnail t3 = new Thumbnail();
+        Thumbnail t4 = new Thumbnail();
+        Thumbnail t5 = new Thumbnail();
+        Thumbnail t6 = new Thumbnail();
+        Thumbnail t7 = new Thumbnail();
+
+        t1.image = bitmap;
+        t2.image = bitmap;
+        t3.image = bitmap;
+        t4.image = bitmap;
+        t5.image = bitmap;
+        t6.image = bitmap;
+        t7.image = bitmap;
+
+        ThumbnailManager.clearThumbs();
+        t1.name = "None";
+        ThumbnailManager.addThumb(t1);
+
+        t2.name = "StarLit";
+        t2.filter = SampleFilters.getStarLitFilter();
+        ThumbnailManager.addThumb(t2);
+
+        t3.name = "BlueMess";
+        t3.filter = SampleFilters.getBlueMessFilter();
+        ThumbnailManager.addThumb(t3);
+
+        t4.name = "AweStruckVibe";
+        t4.filter = SampleFilters.getAweStruckVibeFilter();
+        ThumbnailManager.addThumb(t4);
+
+        t5.name = "Lime";
+        t5.filter = SampleFilters.getLimeStutterFilter();
+        ThumbnailManager.addThumb(t5);
+
+        t6.name = "B&W";
+        t6.filter = new Filter();
+        t6.filter.addSubFilter(new SaturationSubfilter(-100f));
+        ThumbnailManager.addThumb(t6);
+
+        t7.name = "Sepia";
+        t7.filter = new Filter();
+        t7.filter.addSubFilter(new SaturationSubfilter(-100f));
+        t7.filter.addSubFilter(new ColorOverlaySubfilter(1, 102, 51, 0));
+        ThumbnailManager.addThumb(t7);
+
+        return ThumbnailManager.processThumbs(this);
+    }
+
+    private Bitmap getBitmapFromFile() {
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inPreferredConfig = Bitmap.Config.RGB_565;
+        options.inMutable = true;
+        return BitmapFactory.decodeFile(mSession.getFileToUpload().getAbsolutePath(), options);
     }
 
     private View.OnTouchListener setOnTouchListener() {
@@ -95,134 +145,22 @@ public class EditorActivity extends AppCompatActivity implements ToolbarView.OnC
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 final int action = motionEvent.getAction();
-
-                switch (action) {
-                    case MotionEvent.ACTION_DOWN:
-                        Log.d(TAG, "ACTION_DOWN");
-                        // TODO remove effect
-                        break;
-                    case MotionEvent.ACTION_UP:
-                        Log.d(TAG, "ACTION_UP");
-                        // TODO apply effect
-                        break;
-                    default:
-                        break;
+                if (mCurrentFilter != null) {
+                    switch (action) {
+                        case MotionEvent.ACTION_DOWN:
+                            mEffectPreview.setImageBitmap(getBitmapFromFile());
+                            break;
+                        case MotionEvent.ACTION_UP:
+                            mEffectPreview.setImageBitmap(mCurrentFilter.processFilter(getBitmapFromFile()));
+                            break;
+                        default:
+                            break;
+                    }
                 }
+
                 return true;
             }
         };
-    }
-
-    private void loadTextures() {
-        // Generate textures
-        GLES20.glGenTextures(2, mTextures, 0);
-        // Load input bitmap
-        Bitmap bitmap = BitmapFactory.decodeFile(mSession.getFileToUpload().getAbsolutePath());
-        mImageWidth = bitmap.getWidth();
-        mImageHeight = bitmap.getHeight();
-        mTexRenderer.updateTextureSize(mImageWidth, mImageHeight);
-        // Upload to texture
-        GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, mTextures[0]);
-        GLUtils.texImage2D(GLES20.GL_TEXTURE_2D, 0, bitmap, 0);
-        // Set texture parameters
-        GLToolbox.initTexParams();
-    }
-
-    private void applyEffect() {
-        mEffect.apply(mTextures[0], mImageWidth, mImageHeight, mTextures[1]);
-    }
-
-    private void renderResult() {
-        if (mCurrentEffect != EffectType.None) {
-            // if no effect is chosen, just render the original bitmap
-            mTexRenderer.renderTexture(mTextures[1]);
-        } else {
-            // render the result of applyEffect()
-            mTexRenderer.renderTexture(mTextures[0]);
-        }
-    }
-
-    private void initEffect() {
-        EffectFactory effectFactory = mEffectContext.getFactory();
-        if (mEffect != null) {
-            mEffect.release();
-        }
-        switch (mCurrentEffect) {
-            case None:
-                break;
-            case BlackAndWhite:
-                mEffect = effectFactory.createEffect(
-                        EffectFactory.EFFECT_BLACKWHITE);
-                mEffect.setParameter("black", .1f);
-                mEffect.setParameter("white", .7f);
-                break;
-            case Brightness:
-                mEffect = effectFactory.createEffect(
-                        EffectFactory.EFFECT_BRIGHTNESS);
-                mEffect.setParameter("brightness", 2.0f);
-                break;
-            case Contrast:
-                mEffect = effectFactory.createEffect(
-                        EffectFactory.EFFECT_CONTRAST);
-                mEffect.setParameter("contrast", 1.5f);
-                break;
-            case CrossProcess:
-                mEffect = effectFactory.createEffect(
-                        EffectFactory.EFFECT_CROSSPROCESS);
-                break;
-            case Documentary:
-                mEffect = effectFactory.createEffect(
-                        EffectFactory.EFFECT_DOCUMENTARY);
-                break;
-            case FillLight:
-                mEffect = effectFactory.createEffect(
-                        EffectFactory.EFFECT_FILLLIGHT);
-                mEffect.setParameter("strength", .8f);
-                break;
-            case Grain:
-                mEffect = effectFactory.createEffect(
-                        EffectFactory.EFFECT_GRAIN);
-                mEffect.setParameter("strength", 1.0f);
-                break;
-            case GrayScale:
-                mEffect = effectFactory.createEffect(
-                        EffectFactory.EFFECT_GRAYSCALE);
-                break;
-            case Lomoish:
-                mEffect = effectFactory.createEffect(
-                        EffectFactory.EFFECT_LOMOISH);
-                break;
-            case Posterize:
-                mEffect = effectFactory.createEffect(
-                        EffectFactory.EFFECT_POSTERIZE);
-                break;
-            case Saturate:
-                mEffect = effectFactory.createEffect(
-                        EffectFactory.EFFECT_SATURATE);
-                mEffect.setParameter("scale", .5f);
-                break;
-            case Sepia:
-                mEffect = effectFactory.createEffect(
-                        EffectFactory.EFFECT_SEPIA);
-                break;
-            case Temperature:
-                mEffect = effectFactory.createEffect(
-                        EffectFactory.EFFECT_TEMPERATURE);
-                mEffect.setParameter("scale", .9f);
-                break;
-            case Tonal:
-                mEffect = effectFactory.createEffect(
-                        EffectFactory.EFFECT_TINT);
-                mEffect.setParameter("tint", Color.WHITE);
-                break;
-            case Vignette:
-                mEffect = effectFactory.createEffect(
-                        EffectFactory.EFFECT_VIGNETTE);
-                mEffect.setParameter("scale", .5f);
-                break;
-            default:
-                break;
-        }
     }
 
     @Override
@@ -232,6 +170,11 @@ public class EditorActivity extends AppCompatActivity implements ToolbarView.OnC
         ButterKnife.bind(this);
         overridePendingTransition(R.anim.slide_in_right, R.anim.zoom_out);
         initViews();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
     }
 
     @Override
@@ -252,40 +195,13 @@ public class EditorActivity extends AppCompatActivity implements ToolbarView.OnC
 
     @Override
     public void onClickTitle() {
-
     }
 
     @Override
-    public void onSurfaceCreated(GL10 gl10, EGLConfig eglConfig) {
-    }
-
-    @Override
-    public void onSurfaceChanged(GL10 gl10, int width, int height) {
-        if (mTexRenderer != null) {
-            mTexRenderer.updateViewSize(width, height);
+    public void applyEffectType(Filter filter) {
+        if (filter != mCurrentFilter) {
+            mCurrentFilter = filter;
+            mEffectPreview.setImageBitmap(filter.processFilter(getBitmapFromFile()));
         }
-    }
-
-    @Override
-    public void onDrawFrame(GL10 gl10) {
-        if (!mInitialized) {
-            //Only need to do this once
-            mEffectContext = EffectContext.createWithCurrentGlContext();
-            mTexRenderer.init();
-            loadTextures();
-            mInitialized = true;
-        }
-        if (mCurrentEffect != EffectType.None) {
-            //if an effect is chosen initialize it and apply it to the texture
-            initEffect();
-            applyEffect();
-        }
-        renderResult();
-    }
-
-    @Override
-    public void applyEffectType(EffectType effectType) {
-        mCurrentEffect = effectType;
-        mEffectSview.requestRender();
     }
 }

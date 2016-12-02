@@ -1,21 +1,20 @@
 package com.octopepper.mediapickerinstagram.components.editor;
 
 import android.content.Context;
-import android.net.Uri;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.octopepper.mediapickerinstagram.R;
-import com.octopepper.mediapickerinstagram.commons.models.Session;
-import com.octopepper.mediapickerinstagram.commons.models.enums.EffectType;
+import com.octopepper.mediapickerinstagram.commons.models.Thumbnail;
 import com.octopepper.mediapickerinstagram.commons.modules.ReboundModule;
 import com.octopepper.mediapickerinstagram.commons.modules.ReboundModuleDelegate;
 import com.octopepper.mediapickerinstagram.commons.ui.CustomTextView;
-import com.squareup.picasso.Picasso;
+import com.zomato.photofilters.imageprocessors.Filter;
 
 import java.lang.ref.WeakReference;
 
+import butterknife.BindColor;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -26,10 +25,14 @@ public class EffectItemView extends LinearLayout implements ReboundModuleDelegat
     @BindView(R.id.mEffectName)
     CustomTextView mEffectName;
 
-    private Session mSession = Session.getInstance();
+    @BindColor(R.color.dark_chocolate)
+    int _darkChocolate;
+    @BindColor(R.color.light_cream)
+    int _lightCream;
+
     private ReboundModule mReboundModule = ReboundModule.getInstance(this);
-    private EffectType mCurrentEffectType;
     private WeakReference<EffectItemViewListener> mWrListener;
+    private Filter mFilter;
 
     void setListener(EffectItemViewListener listener) {
         this.mWrListener = new WeakReference<>(listener);
@@ -41,22 +44,19 @@ public class EffectItemView extends LinearLayout implements ReboundModuleDelegat
         ButterKnife.bind(this, v);
     }
 
-    public void bind(EffectType effectType) {
-        mCurrentEffectType = effectType;
+    public void bind(Thumbnail thumbnail) {
         mReboundModule.init(mEffectTypeView);
-        mEffectName.setText(effectType.getName());
-        Picasso.with(getContext())
-                .load(Uri.fromFile(mSession.getFileToUpload()))
-                .resize(350, 350)
-                .centerCrop()
-                .placeholder(R.drawable.placeholder_media)
-                .error(R.drawable.placeholder_error_media)
-                .noFade()
-                .into(mEffectTypeView);
+        mEffectName.setText(thumbnail.name);
+
+        // TODO change text color if isSelected
+
+        mEffectTypeView.setImageBitmap(thumbnail.image);
+        mFilter = thumbnail.filter;
     }
 
     @Override
     public void onTouchActionUp() {
-        mWrListener.get().onClickEffectType(mCurrentEffectType);
+        mWrListener.get().onClickEffectType(mFilter);
     }
+
 }

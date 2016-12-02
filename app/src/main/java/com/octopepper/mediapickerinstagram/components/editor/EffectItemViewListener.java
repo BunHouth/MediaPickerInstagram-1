@@ -1,7 +1,7 @@
 package com.octopepper.mediapickerinstagram.components.editor;
 
-import com.octopepper.mediapickerinstagram.commons.models.enums.EffectType;
+import com.zomato.photofilters.imageprocessors.Filter;
 
-public interface EffectItemViewListener {
-    void onClickEffectType(EffectType effectType);
+interface EffectItemViewListener {
+    void onClickEffectType(Filter filter);
 }
