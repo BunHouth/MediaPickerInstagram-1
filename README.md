@@ -4,6 +4,13 @@
 [![](https://img.shields.io/badge/min%20SDK-16-red.svg)](http://developer.android.com/about/dashboards/index.html)
 [![](https://img.shields.io/badge/license-Apache%202-blue.svg)](https://github.com/NodensN/MediaPickerInstagram/blob/master/LICENSE)
 
+I've not found any MediaPicker component suitable for my needs for Android so I made this one.
+It's a Media picker component that aims to replicate the experience provided by Instagram.
+The features I plan to add are : Photo taking functionality Video taking functionality.
+Hope this helps! Some help is much appreciated, there is much work that could be done. :)
+
+## Screenshots
+
 ![picker](https://cloud.githubusercontent.com/assets/10350755/20828571/78467e0e-b878-11e6-9117-dfabb9dc0b90.png)
 ![editor](https://cloud.githubusercontent.com/assets/10350755/20828570/783bade4-b878-11e6-9c4a-daba7c20dc94.png)
 ![camera](https://cloud.githubusercontent.com/assets/10350755/20828569/77a3f6ca-b878-11e6-9420-8d5d0d84a9ed.png)
