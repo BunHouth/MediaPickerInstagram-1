@@ -11,6 +11,7 @@ import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -161,12 +162,13 @@ public class GalleryPickerFragment extends Fragment implements GridAdapterListen
                 FileOutputStream outputStream = null;
                 try {
                     outputStream = new FileOutputStream(path);
-                    bitmap.compress(Bitmap.CompressFormat.JPEG, 85, outputStream);
+                    bitmap.compress(Bitmap.CompressFormat.PNG, 85, outputStream);
                 } catch (Exception e) {
                     e.printStackTrace();
                 } finally {
                     try {
                         if (outputStream != null) {
+                            outputStream.flush();
                             outputStream.close();
                         }
                     } catch (IOException e) {
