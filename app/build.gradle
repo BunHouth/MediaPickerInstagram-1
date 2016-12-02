@@ -41,5 +41,6 @@ dependencies {
     compile 'com.facebook.rebound:rebound:0.3.8'
     compile 'io.reactivex:rxandroid:1.2.1'
     compile 'io.reactivex:rxjava:1.2.2'
+    compile 'com.github.zomato:androidphotofilters:1.0.1'
     testCompile 'junit:junit:4.12'
 }
