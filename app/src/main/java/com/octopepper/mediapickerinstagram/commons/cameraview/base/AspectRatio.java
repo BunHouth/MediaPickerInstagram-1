@@ -82,7 +82,7 @@ public class AspectRatio implements Comparable<AspectRatio>, Parcelable {
         }
     }
 
-    private AspectRatio(int x, int y) {
+    public AspectRatio(int x, int y) {
         mX = x;
         mY = y;
     }

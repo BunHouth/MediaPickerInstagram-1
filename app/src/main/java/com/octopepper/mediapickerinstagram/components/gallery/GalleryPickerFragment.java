@@ -11,7 +11,6 @@ import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +19,7 @@ import com.octopepper.mediapickerinstagram.R;
 import com.octopepper.mediapickerinstagram.commons.bus.RxBusNext;
 import com.octopepper.mediapickerinstagram.commons.models.Session;
 import com.octopepper.mediapickerinstagram.commons.ui.CropImageView;
+import com.octopepper.mediapickerinstagram.commons.ui.CustomTextView;
 import com.octopepper.mediapickerinstagram.commons.utils.FileUtils;
 import com.squareup.picasso.Picasso;
 
@@ -40,6 +40,8 @@ public class GalleryPickerFragment extends Fragment implements GridAdapterListen
     CropImageView mPreview;
     @BindView(R.id.mAppBarContainer)
     AppBarLayout mAppBarContainer;
+    @BindView(R.id.mMediaNotFoundWording)
+    CustomTextView mMediaNotFoundWording;
 
     private static final String EXTENSION_JPG = ".jpg";
     private static final String EXTENSION_JPEG = ".jpeg";
@@ -97,16 +99,14 @@ public class GalleryPickerFragment extends Fragment implements GridAdapterListen
         parseDir(dirDcim);
         File dirPictures = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
         parseDir(dirPictures);
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT) {
-            File dirDocuments = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS);
-            parseDir(dirDocuments);
-        }
+        File dirDocuments = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS);
+        parseDir(dirDocuments);
 
         if (mFiles.size() > 0) {
             displayPreview(mFiles.get(0));
             mGridAdapter.setItems(mFiles);
         } else {
-            // display wording + illustration --> No media found
+            mMediaNotFoundWording.setVisibility(View.VISIBLE);
         }
         isFirstLoad = false;
     }

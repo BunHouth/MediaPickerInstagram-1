@@ -154,7 +154,6 @@ public class MainActivity extends AppCompatActivity implements ToolbarView.OnCli
 
     @Override
     public void onClickTitle() {
-
     }
 
     @Override

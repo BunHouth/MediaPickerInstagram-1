@@ -27,15 +27,14 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.os.ParcelableCompat;
 import android.support.v4.os.ParcelableCompatCreatorCallbacks;
+import android.support.v4.view.ViewCompat;
 import android.util.AttributeSet;
 import android.widget.FrameLayout;
 
 import com.octopepper.mediapickerinstagram.R;
-import com.octopepper.mediapickerinstagram.commons.cameraview.api14.Camera1;
 import com.octopepper.mediapickerinstagram.commons.cameraview.api14.TextureViewPreview;
 import com.octopepper.mediapickerinstagram.commons.cameraview.api21.Camera2;
 import com.octopepper.mediapickerinstagram.commons.cameraview.api23.Camera2Api23;
-import com.octopepper.mediapickerinstagram.commons.cameraview.api9.SurfaceViewPreview;
 import com.octopepper.mediapickerinstagram.commons.cameraview.base.AspectRatio;
 import com.octopepper.mediapickerinstagram.commons.cameraview.base.CameraViewImpl;
 import com.octopepper.mediapickerinstagram.commons.cameraview.base.Constants;
@@ -48,36 +47,54 @@ import java.util.Set;
 
 public class CameraView extends FrameLayout {
 
-    /** The camera device faces the opposite direction as the device's screen. */
+    /**
+     * The camera device faces the opposite direction as the device's screen.
+     */
     public static final int FACING_BACK = Constants.FACING_BACK;
 
-    /** The camera device faces the same direction as the device's screen. */
+    /**
+     * The camera device faces the same direction as the device's screen.
+     */
     public static final int FACING_FRONT = Constants.FACING_FRONT;
 
-    /** Direction the camera faces relative to device screen. */
+    /**
+     * Direction the camera faces relative to device screen.
+     */
     @IntDef({FACING_BACK, FACING_FRONT})
     @Retention(RetentionPolicy.SOURCE)
-    public @interface Facing {
+    @interface Facing {
     }
 
-    /** Flash will not be fired. */
+    /**
+     * Flash will not be fired.
+     */
     public static final int FLASH_OFF = Constants.FLASH_OFF;
 
-    /** Flash will always be fired during snapshot. */
+    /**
+     * Flash will always be fired during snapshot.
+     */
     public static final int FLASH_ON = Constants.FLASH_ON;
 
-    /** Constant emission of light during preview, auto-focus and snapshot. */
+    /**
+     * Constant emission of light during preview, auto-focus and snapshot.
+     */
     public static final int FLASH_TORCH = Constants.FLASH_TORCH;
 
-    /** Flash will be fired automatically when required. */
+    /**
+     * Flash will be fired automatically when required.
+     */
     public static final int FLASH_AUTO = Constants.FLASH_AUTO;
 
-    /** Flash will be fired in red-eye reduction mode. */
+    /**
+     * Flash will be fired in red-eye reduction mode.
+     */
     public static final int FLASH_RED_EYE = Constants.FLASH_RED_EYE;
 
-    /** The mode for for the camera device's flash control */
+    /**
+     * The mode for for the camera device's flash control
+     */
     @IntDef({FLASH_OFF, FLASH_ON, FLASH_TORCH, FLASH_AUTO, FLASH_RED_EYE})
-    public @interface Flash {
+    @interface Flash {
     }
 
     final CameraViewImpl mImpl;
@@ -101,15 +118,9 @@ public class CameraView extends FrameLayout {
         super(context, attrs, defStyleAttr);
         // Internal setup
         final PreviewImpl preview;
-        if (Build.VERSION.SDK_INT < 14) {
-            preview = new SurfaceViewPreview(context, this);
-        } else {
-            preview = new TextureViewPreview(context, this);
-        }
+        preview = new TextureViewPreview(context, this);
         mCallbacks = new CallbackBridge();
-        if (Build.VERSION.SDK_INT < 21) {
-            mImpl = new Camera1(mCallbacks, preview);
-        } else if (Build.VERSION.SDK_INT < 23) {
+        if (Build.VERSION.SDK_INT < 23) {
             mImpl = new Camera2(mCallbacks, preview, context);
         } else {
             mImpl = new Camera2Api23(mCallbacks, preview, context);
@@ -140,7 +151,7 @@ public class CameraView extends FrameLayout {
     @Override
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
-        mDisplayOrientationDetector.enable(ViewCompat2.getDisplay(this));
+        mDisplayOrientationDetector.enable(ViewCompat.getDisplay(this));
     }
 
     @Override
@@ -268,6 +279,7 @@ public class CameraView extends FrameLayout {
      * @param callback The {@link Callback} to remove.
      * @see #addCallback(Callback)
      */
+    @SuppressWarnings("unused")
     public void removeCallback(@NonNull Callback callback) {
         mCallbacks.remove(callback);
     }
@@ -277,6 +289,7 @@ public class CameraView extends FrameLayout {
      *                         preserve the aspect ratio of camera.
      * @see #getAdjustViewBounds()
      */
+    @SuppressWarnings("unused")
     public void setAdjustViewBounds(boolean adjustViewBounds) {
         if (mAdjustViewBounds != adjustViewBounds) {
             mAdjustViewBounds = adjustViewBounds;
@@ -289,6 +302,7 @@ public class CameraView extends FrameLayout {
      * camera.
      * @see #setAdjustViewBounds(boolean)
      */
+    @SuppressWarnings("unused")
     public boolean getAdjustViewBounds() {
         return mAdjustViewBounds;
     }
@@ -317,6 +331,7 @@ public class CameraView extends FrameLayout {
     /**
      * Gets all the aspect ratios supported by the current camera.
      */
+    @SuppressWarnings("unused")
     public Set<AspectRatio> getSupportedAspectRatios() {
         return mImpl.getSupportedAspectRatios();
     }
@@ -431,12 +446,12 @@ public class CameraView extends FrameLayout {
             }
         }
 
-        public void reserveRequestLayoutOnOpen() {
+        void reserveRequestLayoutOnOpen() {
             mRequestLayoutOnOpen = true;
         }
     }
 
-    protected static class SavedState extends BaseSavedState {
+    private static class SavedState extends BaseSavedState {
 
         @Facing
         int facing;
@@ -449,7 +464,7 @@ public class CameraView extends FrameLayout {
         int flash;
 
         @SuppressWarnings("WrongConstant")
-        public SavedState(Parcel source, ClassLoader loader) {
+        SavedState(Parcel source, ClassLoader loader) {
             super(source);
             facing = source.readInt();
             ratio = source.readParcelable(loader);
@@ -457,7 +472,7 @@ public class CameraView extends FrameLayout {
             flash = source.readInt();
         }
 
-        public SavedState(Parcelable superState) {
+        SavedState(Parcelable superState) {
             super(superState);
         }
 
