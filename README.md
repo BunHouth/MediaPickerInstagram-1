@@ -1,7 +1,7 @@
 # MediaPickerInstagram
 
 [![](https://img.shields.io/badge/platform-android-orange.svg)](https://developer.android.com)
-[![](https://img.shields.io/badge/min%20SDK-16-red.svg)](http://developer.android.com/about/dashboards/index.html)
+[![](https://img.shields.io/badge/min%20SDK-21-red.svg)](http://developer.android.com/about/dashboards/index.html)
 [![](https://img.shields.io/badge/license-Apache%202-blue.svg)](https://github.com/NodensN/MediaPickerInstagram/blob/master/LICENSE)
 
 I've not found any MediaPicker component suitable for my needs for Android so I made this one.
@@ -116,7 +116,7 @@ Code style for Android --> [link](http://source.android.com/source/code-style.ht
 ## Android Version Support
 Android fragmentation analytics --> [Platform Versions](http://developer.android.com/about/dashboards/index.html#Platform)
 
-* Min API 16 --> Jelly Bean : 4.1.x
+* Min API 21 --> Lollipop : 5.x.x
 * Max API 25 --> Nougat : 7.x.x
 
 ## Contributors
