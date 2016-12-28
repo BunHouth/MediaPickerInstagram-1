@@ -31,7 +31,7 @@ abstract class DisplayOrientationDetector {
     private final OrientationEventListener mOrientationEventListener;
 
     /** Mapping from Surface.Rotation_n to degrees. */
-    static final SparseIntArray DISPLAY_ORIENTATIONS = new SparseIntArray();
+    private static final SparseIntArray DISPLAY_ORIENTATIONS = new SparseIntArray();
 
     static {
         DISPLAY_ORIENTATIONS.put(Surface.ROTATION_0, 0);
@@ -40,11 +40,11 @@ abstract class DisplayOrientationDetector {
         DISPLAY_ORIENTATIONS.put(Surface.ROTATION_270, 270);
     }
 
-    Display mDisplay;
+    private Display mDisplay;
 
     private int mLastKnownDisplayOrientation = 0;
 
-    public DisplayOrientationDetector(Context context) {
+    DisplayOrientationDetector(Context context) {
         mOrientationEventListener = new OrientationEventListener(context) {
 
             /** This is either Surface.Rotation_0, _90, _180, _270, or -1 (invalid). */
@@ -65,23 +65,23 @@ abstract class DisplayOrientationDetector {
         };
     }
 
-    public void enable(Display display) {
+    void enable(Display display) {
         mDisplay = display;
         mOrientationEventListener.enable();
         // Immediately dispatch the first callback
         dispatchOnDisplayOrientationChanged(DISPLAY_ORIENTATIONS.get(display.getRotation()));
     }
 
-    public void disable() {
+    void disable() {
         mOrientationEventListener.disable();
         mDisplay = null;
     }
 
-    public int getLastKnownDisplayOrientation() {
+    int getLastKnownDisplayOrientation() {
         return mLastKnownDisplayOrientation;
     }
 
-    void dispatchOnDisplayOrientationChanged(int displayOrientation) {
+    private void dispatchOnDisplayOrientationChanged(int displayOrientation) {
         mLastKnownDisplayOrientation = displayOrientation;
         onDisplayOrientationChanged(displayOrientation);
     }

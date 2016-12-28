@@ -16,10 +16,8 @@
 
 package com.octopepper.mediapickerinstagram.commons.cameraview.api21;
 
-import android.Manifest;
 import android.annotation.TargetApi;
 import android.content.Context;
-import android.content.pm.PackageManager;
 import android.graphics.ImageFormat;
 import android.hardware.camera2.CameraAccessException;
 import android.hardware.camera2.CameraCaptureSession;
@@ -33,7 +31,6 @@ import android.hardware.camera2.params.StreamConfigurationMap;
 import android.media.Image;
 import android.media.ImageReader;
 import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 import android.util.SparseIntArray;
 import android.view.Surface;
@@ -127,7 +124,7 @@ public class Camera2 extends CameraViewImpl {
 
     };
 
-    PictureCaptureCallback mCaptureCallback = new PictureCaptureCallback() {
+    private PictureCaptureCallback mCaptureCallback = new PictureCaptureCallback() {
 
         @Override
         public void onPrecaptureRequired() {
@@ -173,11 +170,11 @@ public class Camera2 extends CameraViewImpl {
 
     private CameraCharacteristics mCameraCharacteristics;
 
-    CameraDevice mCamera;
+    private CameraDevice mCamera;
 
-    CameraCaptureSession mCaptureSession;
+    private CameraCaptureSession mCaptureSession;
 
-    CaptureRequest.Builder mPreviewRequestBuilder;
+    private CaptureRequest.Builder mPreviewRequestBuilder;
 
     private ImageReader mImageReader;
 
@@ -436,7 +433,7 @@ public class Camera2 extends CameraViewImpl {
      * <p>This rewrites {@link #mPreviewRequestBuilder}.</p>
      * <p>The result will be continuously processed in {@link #mSessionCallback}.</p>
      */
-    public void startCaptureSession() {
+    private void startCaptureSession() {
         if (!isCameraOpened() || !mPreview.isReady() || mImageReader == null) {
             return;
         }
@@ -483,7 +480,7 @@ public class Camera2 extends CameraViewImpl {
     /**
      * Updates the internal state of auto-focus to {@link #mAutoFocus}.
      */
-    public void updateAutoFocus() {
+    private void updateAutoFocus() {
         if (mAutoFocus) {
             int[] modes = mCameraCharacteristics.get(
                     CameraCharacteristics.CONTROL_AF_AVAILABLE_MODES);
@@ -506,7 +503,7 @@ public class Camera2 extends CameraViewImpl {
     /**
      * Updates the internal state of flash to {@link #mFlash}.
      */
-    public void updateFlash() {
+    private void updateFlash() {
         switch (mFlash) {
             case Constants.FLASH_OFF:
                 mPreviewRequestBuilder.set(CaptureRequest.CONTROL_AE_MODE,
@@ -558,7 +555,7 @@ public class Camera2 extends CameraViewImpl {
     /**
      * Captures a still picture.
      */
-    public void captureStillPicture() {
+    private void captureStillPicture() {
         try {
             CaptureRequest.Builder captureRequestBuilder = mCamera.createCaptureRequest(
                     CameraDevice.TEMPLATE_STILL_CAPTURE);
@@ -619,7 +616,7 @@ public class Camera2 extends CameraViewImpl {
      * Unlocks the auto-focus and restart camera preview. This is supposed to be called after
      * capturing a still picture.
      */
-    public void unlockFocus() {
+    private void unlockFocus() {
         mPreviewRequestBuilder.set(CaptureRequest.CONTROL_AF_TRIGGER,
                 CaptureRequest.CONTROL_AF_TRIGGER_CANCEL);
         try {
