@@ -52,7 +52,7 @@ public class Camera1 extends CameraViewImpl {
 
     private int mCameraId;
 
-    Camera mCamera;
+    private Camera mCamera;
 
     private Camera.Parameters mCameraParameters;
 
