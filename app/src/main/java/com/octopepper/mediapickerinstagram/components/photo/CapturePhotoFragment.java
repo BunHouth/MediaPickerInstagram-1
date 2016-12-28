@@ -5,7 +5,6 @@ import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.content.Context;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
@@ -21,7 +20,6 @@ import android.widget.RelativeLayout;
 
 import com.octopepper.mediapickerinstagram.R;
 import com.octopepper.mediapickerinstagram.commons.cameraview.CameraView;
-import com.octopepper.mediapickerinstagram.commons.cameraview.base.AspectRatio;
 import com.octopepper.mediapickerinstagram.commons.models.Session;
 import com.octopepper.mediapickerinstagram.commons.utils.FileUtils;
 
@@ -101,7 +99,7 @@ public class CapturePhotoFragment extends Fragment {
             RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) mCameraPhotoView.getLayoutParams();
             lp.height = getResources().getDisplayMetrics().widthPixels;
             mCameraPhotoView.setLayoutParams(lp);
-            mCameraPhotoView.setAspectRatio(new AspectRatio(1,1));
+            mShutter.setLayoutParams(lp);
         }
     }
 
@@ -151,40 +149,37 @@ public class CapturePhotoFragment extends Fragment {
 
         @Override
         public void onPictureTaken(CameraView cameraView, final byte[] data) {
-            getBackgroundHandler().post(new Runnable() {
-                @Override
-                public void run() {
-                    File dirDest = FileUtils.getLocalDir();
-                    File file;
-                    if (dirDest.exists()) {
+            getBackgroundHandler().post(() -> {
+                File dirDest = FileUtils.getLocalDir();
+                File file;
+                if (dirDest.exists()) {
+                    file = new File(FileUtils.getNewFilePath());
+                } else {
+                    if (dirDest.mkdir()) {
                         file = new File(FileUtils.getNewFilePath());
                     } else {
-                        if (dirDest.mkdir()) {
-                            file = new File(FileUtils.getNewFilePath());
-                        } else {
-                            file = null;
-                        }
+                        file = null;
                     }
-                    OutputStream os = null;
-                    if (file != null) {
-                        try {
-                            os = new FileOutputStream(file);
-                            os.write(data);
-                            os.close();
-                        } catch (IOException e) {
-                            // Cannot write
-                        } finally {
-                            if (os != null) {
-                                try {
-                                    os.close();
-                                } catch (IOException e) {
-                                    // Ignore
-                                }
+                }
+                OutputStream os = null;
+                if (file != null) {
+                    try {
+                        os = new FileOutputStream(file);
+                        os.write(data);
+                    } catch (IOException e) {
+                        // Cannot write
+                    } finally {
+                        if (os != null) {
+                            try {
+                                os.flush();
+                                os.close();
+                            } catch (IOException e) {
+                                // Ignore
                             }
                         }
-                        mSession.setFileToUpload(file);
-                        listener.openEditor();
                     }
+                    mSession.setFileToUpload(file);
+                    listener.openEditor();
                 }
             });
         }
@@ -211,11 +206,7 @@ public class CapturePhotoFragment extends Fragment {
     public void onDestroy() {
         super.onDestroy();
         if (mBackgroundHandler != null) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
-                mBackgroundHandler.getLooper().quitSafely();
-            } else {
-                mBackgroundHandler.getLooper().quit();
-            }
+            mBackgroundHandler.getLooper().quitSafely();
             mBackgroundHandler = null;
         }
     }

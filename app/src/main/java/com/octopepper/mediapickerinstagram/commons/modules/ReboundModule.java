@@ -46,21 +46,18 @@ public class ReboundModule {
     }
 
     private View.OnTouchListener addOnTouchListener() {
-        return new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
-                switch (motionEvent.getAction()) {
-                    case MotionEvent.ACTION_DOWN:
-                        mSpring.setEndValue(1);
-                        break;
-                    case MotionEvent.ACTION_UP:
-                        mDelegate.onTouchActionUp();
-                    case MotionEvent.ACTION_CANCEL:
-                        mSpring.setEndValue(0);
-                        break;
-                }
-                return true;
+        return (view, motionEvent) -> {
+            switch (motionEvent.getAction()) {
+                case MotionEvent.ACTION_DOWN:
+                    mSpring.setEndValue(1);
+                    break;
+                case MotionEvent.ACTION_UP:
+                    mDelegate.onTouchActionUp();
+                case MotionEvent.ACTION_CANCEL:
+                    mSpring.setEndValue(0);
+                    break;
             }
+            return true;
         };
     }
 

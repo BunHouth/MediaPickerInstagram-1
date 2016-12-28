@@ -275,7 +275,7 @@ public class CameraView extends FrameLayout {
 
     /**
      * Remove a callback.
-     *
+     *w
      * @param callback The {@link Callback} to remove.
      * @see #addCallback(Callback)
      */

@@ -26,6 +26,8 @@ import butterknife.BindString;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+import static com.octopepper.mediapickerinstagram.commons.models.enums.SourceType.Gallery;
+
 public class MainActivity extends AppCompatActivity implements ToolbarView.OnClickTitleListener,
         ToolbarView.OnClickNextListener, ToolbarView.OnClickBackListener, CapturePhotoFragmentListener,
         GalleryPickerFragmentListener {
@@ -102,7 +104,7 @@ public class MainActivity extends AppCompatActivity implements ToolbarView.OnCli
     private ArrayList<Fragment> getListFragment() {
         ArrayList<Fragment> fragments = new ArrayList<>();
 
-        if (mSourceTypeSet.contains(SourceType.Gallery)) {
+        if (mSourceTypeSet.contains(Gallery)) {
             fragments.add(GalleryPickerFragment.newInstance());
             mMainTabLayout.addTab(mMainTabLayout.newTab().setText(_tabGallery));
         }
@@ -130,7 +132,7 @@ public class MainActivity extends AppCompatActivity implements ToolbarView.OnCli
         setContentView(R.layout.main_view);
         ButterKnife.bind(this);
 
-        mSourceTypeSet.add(SourceType.Gallery);
+        mSourceTypeSet.add(Gallery);
         mSourceTypeSet.add(SourceType.Photo);
         mSourceTypeSet.add(SourceType.Video);
 

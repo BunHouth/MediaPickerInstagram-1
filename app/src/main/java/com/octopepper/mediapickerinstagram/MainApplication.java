@@ -2,7 +2,6 @@ package com.octopepper.mediapickerinstagram;
 
 import android.app.ActivityManager;
 import android.graphics.Bitmap;
-import android.os.Build;
 import android.support.multidex.MultiDex;
 import android.support.multidex.MultiDexApplication;
 
@@ -24,7 +23,7 @@ public class MainApplication extends MultiDexApplication {
     }
 
     private boolean isLowMemoryDevice() {
-        return Build.VERSION.SDK_INT >= 19 && ((ActivityManager) getSystemService(ACTIVITY_SERVICE)).isLowRamDevice();
+        return ((ActivityManager) getSystemService(ACTIVITY_SERVICE)).isLowRamDevice();
     }
 
 }

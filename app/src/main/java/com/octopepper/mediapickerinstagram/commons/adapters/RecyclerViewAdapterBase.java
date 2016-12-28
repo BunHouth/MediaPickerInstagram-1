@@ -30,6 +30,7 @@ public abstract class RecyclerViewAdapterBase<T, V extends View> extends Recycle
         }
     }
 
+    @SuppressWarnings("unused")
     public void addItems(List<T> items, int position) {
         if (items != null) {
             mItems.addAll(position, items);
@@ -37,6 +38,7 @@ public abstract class RecyclerViewAdapterBase<T, V extends View> extends Recycle
         }
     }
 
+    @SuppressWarnings("unused")
     public void addItem(T item, int position) {
         if (item != null) {
             mItems.add(position, item);
@@ -44,6 +46,7 @@ public abstract class RecyclerViewAdapterBase<T, V extends View> extends Recycle
         }
     }
 
+    @SuppressWarnings("unused")
     public void removeItem(T item) {
         if (item != null) {
             int position = mItems.indexOf(item);
@@ -52,6 +55,7 @@ public abstract class RecyclerViewAdapterBase<T, V extends View> extends Recycle
         }
     }
 
+    @SuppressWarnings("unused")
     public void removeItems(List<T> items) {
         if (items != null) {
             mItems.removeAll(items);
@@ -59,6 +63,7 @@ public abstract class RecyclerViewAdapterBase<T, V extends View> extends Recycle
         }
     }
 
+    @SuppressWarnings("unused")
     public void removeRangeItem(int firstPosition) {
         int size = mItems.size();
         List<T> removes = new ArrayList<>();
@@ -69,12 +74,14 @@ public abstract class RecyclerViewAdapterBase<T, V extends View> extends Recycle
         notifyItemRangeRemoved(firstPosition, size);
     }
 
+    @SuppressWarnings("unused")
     public void clearItems() {
         int size = mItems.size();
         mItems.clear();
         notifyItemRangeRemoved(0, size);
     }
 
+    @SuppressWarnings("unused")
     public T getItemAtPosition(int position) {
         return mItems.get(position);
     }

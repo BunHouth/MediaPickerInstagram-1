@@ -148,22 +148,17 @@ public class Camera2 extends CameraViewImpl {
     };
 
     private final ImageReader.OnImageAvailableListener mOnImageAvailableListener
-            = new ImageReader.OnImageAvailableListener() {
-
-        @Override
-        public void onImageAvailable(ImageReader reader) {
-            try (Image image = reader.acquireNextImage()) {
-                Image.Plane[] planes = image.getPlanes();
-                if (planes.length > 0) {
-                    ByteBuffer buffer = planes[0].getBuffer();
-                    byte[] data = new byte[buffer.remaining()];
-                    buffer.get(data);
-                    mCallback.onPictureTaken(data);
+            = reader -> {
+                try (Image image = reader.acquireNextImage()) {
+                    Image.Plane[] planes = image.getPlanes();
+                    if (planes.length > 0) {
+                        ByteBuffer buffer = planes[0].getBuffer();
+                        byte[] data = new byte[buffer.remaining()];
+                        buffer.get(data);
+                        mCallback.onPictureTaken(data);
+                    }
                 }
-            }
-        }
-
-    };
+            };
 
 
     private String mCameraId;
@@ -195,12 +190,7 @@ public class Camera2 extends CameraViewImpl {
     public Camera2(Callback callback, PreviewImpl preview, Context context) {
         super(callback, preview);
         mCameraManager = (CameraManager) context.getSystemService(Context.CAMERA_SERVICE);
-        mPreview.setCallback(new PreviewImpl.Callback() {
-            @Override
-            public void onSurfaceChanged() {
-                startCaptureSession();
-            }
-        });
+        mPreview.setCallback(() -> startCaptureSession());
     }
 
     @Override

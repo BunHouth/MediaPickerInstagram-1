@@ -141,25 +141,22 @@ public class EditorActivity extends AppCompatActivity implements ToolbarView.OnC
     }
 
     private View.OnTouchListener setOnTouchListener() {
-        return new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
-                final int action = motionEvent.getAction();
-                if (mCurrentFilter != null) {
-                    switch (action) {
-                        case MotionEvent.ACTION_DOWN:
-                            mEffectPreview.setImageBitmap(getBitmapFromFile());
-                            break;
-                        case MotionEvent.ACTION_UP:
-                            mEffectPreview.setImageBitmap(mCurrentFilter.processFilter(getBitmapFromFile()));
-                            break;
-                        default:
-                            break;
-                    }
+        return (view, motionEvent) -> {
+            final int action = motionEvent.getAction();
+            if (mCurrentFilter != null) {
+                switch (action) {
+                    case MotionEvent.ACTION_DOWN:
+                        mEffectPreview.setImageBitmap(getBitmapFromFile());
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        mEffectPreview.setImageBitmap(mCurrentFilter.processFilter(getBitmapFromFile()));
+                        break;
+                    default:
+                        break;
                 }
-
-                return true;
             }
+
+            return true;
         };
     }
 

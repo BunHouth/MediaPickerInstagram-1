@@ -30,7 +30,6 @@ import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import rx.functions.Action1;
 
 public class GalleryPickerFragment extends Fragment implements GridAdapterListener {
 
@@ -144,13 +143,10 @@ public class GalleryPickerFragment extends Fragment implements GridAdapterListen
 
     private void eventBus() {
         mRxBus.toObserverable()
-                .subscribe(new Action1<Object>() {
-                    @Override
-                    public void call(Object o) {
-                        mSession.setFileToUpload(saveBitmap(mPreview.getCroppedImage(),
-                                FileUtils.getNewFilePath()));
-                        listener.openEditor();
-                    }
+                .subscribe(o -> {
+                    mSession.setFileToUpload(saveBitmap(mPreview.getCroppedImage(),
+                            FileUtils.getNewFilePath()));
+                    listener.openEditor();
                 });
     }
 
