@@ -21,6 +21,7 @@ import android.widget.RelativeLayout;
 
 import com.octopepper.mediapickerinstagram.R;
 import com.octopepper.mediapickerinstagram.commons.cameraview.CameraView;
+import com.octopepper.mediapickerinstagram.commons.cameraview.base.AspectRatio;
 import com.octopepper.mediapickerinstagram.commons.models.Session;
 import com.octopepper.mediapickerinstagram.commons.utils.FileUtils;
 
@@ -97,10 +98,10 @@ public class CapturePhotoFragment extends Fragment {
     private void initViews() {
         if (mCameraPhotoView != null) {
             mCameraPhotoView.addCallback(mCallback);
-            float heightDp = getResources().getDisplayMetrics().heightPixels / 1.75f;
             RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) mCameraPhotoView.getLayoutParams();
-            lp.height = (int)heightDp;
+            lp.height = getResources().getDisplayMetrics().widthPixels;
             mCameraPhotoView.setLayoutParams(lp);
+            mCameraPhotoView.setAspectRatio(new AspectRatio(1,1));
         }
     }
 
