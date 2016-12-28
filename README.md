@@ -4,7 +4,7 @@
 [![](https://img.shields.io/badge/min%20SDK-21-red.svg)](http://developer.android.com/about/dashboards/index.html)
 [![](https://img.shields.io/badge/license-Apache%202-blue.svg)](https://github.com/NodensN/MediaPickerInstagram/blob/master/LICENSE)
 [![](https://www.bitrise.io/app/a75cb334c78a65a1.svg?token=iegzE5D55LP0tjg3OvaQFA&branch=master)](https://www.bitrise.io/app/a75cb334c78a65a1)
-[![](https://android-arsenal.com/details/1/4826)](https://img.shields.io/badge/Android%20Arsenal-MediaPickerInstagram-brightgreen.svg)
+[![](https://img.shields.io/badge/Android%20Arsenal-MediaPickerInstagram-brightgreen.svg)](https://android-arsenal.com/details/1/4826)
 
 I've not found any MediaPicker component suitable for my needs for Android so I made this one.
 It's a Media picker component that aims to replicate the experience provided by Instagram.
