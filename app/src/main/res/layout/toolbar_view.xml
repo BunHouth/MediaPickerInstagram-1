@@ -6,37 +6,32 @@
         android:id="@+id/mIconBack"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_marginLeft="16dp"
         android:layout_marginStart="16dp"
         android:paddingBottom="16dp"
         android:paddingTop="16dp"
         android:text="@string/icon_back_md"
         android:textColor="@color/dark_chocolate"
         android:textSize="24sp"
-        app:customFont="Custom-Font" />
+        app:customFont="Custom-Font"/>
 
     <com.octopepper.mediapickerinstagram.commons.ui.CustomTextView
         android:id="@+id/mTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/activity_horizontal_margin"
         android:layout_marginStart="@dimen/activity_horizontal_margin"
         android:layout_marginTop="14dp"
         android:layout_toEndOf="@id/mIconBack"
-        android:layout_toRightOf="@id/mIconBack"
         android:paddingBottom="16dp"
         android:text="@string/app_name"
         android:textColor="@color/dark_chocolate"
         android:textSize="20sp"
-        app:customFont="Roboto-Regular" />
+        app:customFont="Roboto-Regular"/>
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
         android:orientation="horizontal">
 
@@ -44,12 +39,12 @@
             android:id="@+id/mIconNext"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:clickable="true"
             android:padding="16dp"
             android:text="@string/toolbar_bt_next"
-            android:clickable="true"
             android:textColor="@color/btn_next_color"
             android:textSize="18sp"
-            app:customFont="Roboto-Regular" />
+            app:customFont="Roboto-Regular"/>
 
     </LinearLayout>
 
