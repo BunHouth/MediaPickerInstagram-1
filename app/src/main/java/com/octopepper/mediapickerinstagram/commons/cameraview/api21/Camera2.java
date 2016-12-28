@@ -16,8 +16,10 @@
 
 package com.octopepper.mediapickerinstagram.commons.cameraview.api21;
 
+import android.Manifest;
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.graphics.ImageFormat;
 import android.hardware.camera2.CameraAccessException;
 import android.hardware.camera2.CameraCaptureSession;
@@ -31,6 +33,7 @@ import android.hardware.camera2.params.StreamConfigurationMap;
 import android.media.Image;
 import android.media.ImageReader;
 import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 import android.util.SparseIntArray;
 import android.view.Surface;
@@ -196,11 +199,11 @@ public class Camera2 extends CameraViewImpl {
         super(callback, preview);
         mCameraManager = (CameraManager) context.getSystemService(Context.CAMERA_SERVICE);
         mPreview.setCallback(new PreviewImpl.Callback() {
-                @Override
-                public void onSurfaceChanged() {
-                    startCaptureSession();
-                }
-            });
+            @Override
+            public void onSurfaceChanged() {
+                startCaptureSession();
+            }
+        });
     }
 
     @Override
