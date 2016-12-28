@@ -29,6 +29,19 @@
 
     </android.support.design.widget.AppBarLayout>
 
+    <com.octopepper.mediapickerinstagram.commons.ui.CustomTextView
+        android:id="@+id/mMediaNotFoundWording"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/activity_vertical_margin"
+        android:gravity="center_horizontal"
+        android:textSize="18sp"
+        android:textColor="@color/dim_grey"
+        android:text="@string/gallery_no_media_found"
+        android:visibility="gone"
+        app:customFont="Roboto-Regular"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/mGalleryRecyclerView"
         android:layout_width="match_parent"
