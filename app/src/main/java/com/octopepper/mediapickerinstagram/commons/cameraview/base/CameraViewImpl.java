@@ -61,6 +61,8 @@ public abstract class CameraViewImpl {
 
     public abstract void takePicture();
 
+    public abstract void takeVideo();
+
     public abstract void setDisplayOrientation(int displayOrientation);
 
     public interface Callback {

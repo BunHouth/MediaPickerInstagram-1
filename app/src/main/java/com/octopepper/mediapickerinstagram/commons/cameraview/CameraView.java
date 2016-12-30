@@ -29,6 +29,7 @@ import android.support.v4.os.ParcelableCompat;
 import android.support.v4.os.ParcelableCompatCreatorCallbacks;
 import android.support.v4.view.ViewCompat;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.widget.FrameLayout;
 
 import com.octopepper.mediapickerinstagram.R;
@@ -132,6 +133,7 @@ public class CameraView extends FrameLayout {
         setFacing(a.getInt(R.styleable.CameraView_facing, FACING_BACK));
         String aspectRatio = a.getString(R.styleable.CameraView_aspectRatio);
         if (aspectRatio != null) {
+            Log.e("TEST", "ratio : " + aspectRatio);
             setAspectRatio(AspectRatio.parse(aspectRatio));
         } else {
             setAspectRatio(Constants.DEFAULT_ASPECT_RATIO);

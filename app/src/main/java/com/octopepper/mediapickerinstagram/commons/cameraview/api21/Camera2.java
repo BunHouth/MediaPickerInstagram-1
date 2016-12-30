@@ -101,8 +101,10 @@ public class Camera2 extends CameraViewImpl {
             updateAutoFocus();
             updateFlash();
             try {
-                mCaptureSession.setRepeatingRequest(mPreviewRequestBuilder.build(),
-                        mCaptureCallback, null);
+                if (isCameraOpened() && mCaptureSession != null) {
+                    mCaptureSession.setRepeatingRequest(mPreviewRequestBuilder.build(),
+                            mCaptureCallback, null);
+                }
             } catch (CameraAccessException e) {
                 Log.e(TAG, "Failed to start camera preview because it couldn't access camera", e);
             } catch (IllegalStateException e) {
@@ -149,16 +151,16 @@ public class Camera2 extends CameraViewImpl {
 
     private final ImageReader.OnImageAvailableListener mOnImageAvailableListener
             = reader -> {
-                try (Image image = reader.acquireNextImage()) {
-                    Image.Plane[] planes = image.getPlanes();
-                    if (planes.length > 0) {
-                        ByteBuffer buffer = planes[0].getBuffer();
-                        byte[] data = new byte[buffer.remaining()];
-                        buffer.get(data);
-                        mCallback.onPictureTaken(data);
-                    }
-                }
-            };
+        try (Image image = reader.acquireNextImage()) {
+            Image.Plane[] planes = image.getPlanes();
+            if (planes.length > 0) {
+                ByteBuffer buffer = planes[0].getBuffer();
+                byte[] data = new byte[buffer.remaining()];
+                buffer.get(data);
+                mCallback.onPictureTaken(data);
+            }
+        }
+    };
 
 
     private String mCameraId;
@@ -190,7 +192,7 @@ public class Camera2 extends CameraViewImpl {
     public Camera2(Callback callback, PreviewImpl preview, Context context) {
         super(callback, preview);
         mCameraManager = (CameraManager) context.getSystemService(Context.CAMERA_SERVICE);
-        mPreview.setCallback(() -> startCaptureSession());
+        mPreview.setCallback(this::startCaptureSession);
     }
 
     @Override
@@ -320,6 +322,11 @@ public class Camera2 extends CameraViewImpl {
         } else {
             captureStillPicture();
         }
+    }
+
+    @Override
+    public void takeVideo() {
+        // TODO
     }
 
     @Override
