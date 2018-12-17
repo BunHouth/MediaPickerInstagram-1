@@ -2,8 +2,8 @@
     <string name="app_name">MediaPickerIntagram</string>
 
     <string name="tab_gallery">Gallery</string>
-    <string name="tab_photo">Photo</string>
-    <string name="tab_video">Video</string>
+    <string name="tab_photo">Favorites</string>
+    <string name="tab_video">Polaroid LAB</string>
 
     <string name="toolbar_bt_next">Next</string>
     <string name="toolbar_title_editor">Editor</string>

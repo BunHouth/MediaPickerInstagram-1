@@ -93,14 +93,14 @@ public class GalleryPickerFragment extends Fragment implements GridAdapterListen
 
     private void fetchMedia() {
         mFiles = new ArrayList<>();
-        File dirDownloads = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+        File dirDownloads = Environment.getExternalStoragePublicDirectory("POLAROID");
         parseDir(dirDownloads);
-        File dirDcim = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM);
-        parseDir(dirDcim);
-        File dirPictures = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
-        parseDir(dirPictures);
-        File dirDocuments = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS);
-        parseDir(dirDocuments);
+//        File dirDcim = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM);
+//        parseDir(dirDcim);
+//        File dirPictures = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
+//        parseDir(dirPictures);
+//        File dirDocuments = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS);
+//        parseDir(dirDocuments);
 
         if (mFiles.size() > 0) {
             displayPreview(mFiles.get(0));
